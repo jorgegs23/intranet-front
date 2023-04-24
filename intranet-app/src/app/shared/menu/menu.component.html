@@ -1,0 +1,19 @@
+<div class="card">
+    <p-menubar [model]="items">
+        <ng-template pTemplate="start">
+            <img src="https://primefaces.org/cdn/primeng/images/primeng.svg" height="40" class="mr-2" />
+        </ng-template>
+        <ng-template pTemplate="end">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-sun mr-4"></i>
+                <p-inputSwitch class="mr-4" [(ngModel)]="tema" (onChange)="changeTheme()"></p-inputSwitch>
+                <i class="pi pi-moon"></i>
+                <!-- <input type="text" pInputText placeholder="Search" class="w-full" /> -->
+            </div>    
+        </ng-template>
+    </p-menubar>
+
+    <p-confirmDialog [style]="{width: '50vw'}"></p-confirmDialog>
+</div>
+
+

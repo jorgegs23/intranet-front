@@ -1,0 +1,101 @@
+<div class="container">
+
+    <div class="grid mt-4">
+        <div class="col-4">
+            <span class="p-float-label mb-4">
+                <input id="nombre" type="text" [(ngModel)]="nombre" pInputText class="w-full">
+                <label for="nombre">Nombte o apellidos</label>
+              </span>
+        </div>
+        <div class="col">
+            <span class="p-float-label">
+                <p-dropdown [options]="perfiles" [(ngModel)]="perfil" optionLabel="text" inputId="float-label"></p-dropdown>
+                <label for="float-label">Perfil</label>
+              </span>
+        </div>
+        <div class="col">
+            <span class="p-float-label">
+                <p-dropdown [options]="opcionesSiONo" [(ngModel)]="validado" optionLabel="text" inputId="float-label"></p-dropdown>
+                <label for="float-label">Validado</label>
+              </span>
+        </div>
+        <div class="col">
+            <span class="p-float-label">
+                <p-dropdown [options]="opcionesSiONo" [(ngModel)]="activo"  optionLabel="text" inputId="float-label"></p-dropdown>
+                <label for="float-label">Activo</label>
+              </span>
+        </div>
+    </div>
+
+    <p-toolbar styleClass="mb-4 gap-2">
+        <ng-template pTemplate="left">
+            <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2" (click)="add()"></button>
+            <button pButton pRipple [label]="'delete'" icon="pi pi-trash" class="p-button-danger" (click)="deleteSelected()" [disabled]="!selectedItems || !selectedItems.length"></button>
+        </ng-template>
+    
+        <ng-template pTemplate="right">
+            <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"></button>
+        </ng-template>
+    </p-toolbar>
+   
+    <p-messages [(value)]="messages" ></p-messages>
+
+    <div>
+        <p-table
+            #dt
+            [value]="usuarios"
+            [rows]="10"
+            [paginator]="true"
+            [globalFilterFields]="['nombre', 'email', 'perfil.descripcion', 'validado', 'activo']"
+            [tableStyle]="{ 'min-width': '75rem' }"
+            [(selection)]="selectedItems"
+            [rowHover]="true"
+            dataKey="id"
+            currentPageReportTemplate="Usuarios {first} - {last} de {totalRecords}"
+            [showCurrentPageReport]="true"
+        >
+            <ng-template pTemplate="caption">
+                <div class="flex align-items-center justify-content-between">
+                    <h3 class="m-0">Listado de usuarios</h3>
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-search"></i>
+                        <input pInputText type="text" (input)="applyFilterGlobal($event, 'contains')" placeholder="Search..." />
+                    </span>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width: 4rem">
+                        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                    </th>
+                    <th pSortableColumn="nombre" style="min-width:15rem">Nombre y apellidos <p-sortIcon field="nombre"></p-sortIcon></th>
+                    <th pSortableColumn="email">Email <p-sortIcon field="email"></p-sortIcon></th>
+                    <th pSortableColumn="perfil.descripcion" style="min-width:10rem">Perfil <p-sortIcon field="perfil.descripcion"></p-sortIcon></th>
+                    <th pSortableColumn="validado">Activo <p-sortIcon field="validado"></p-sortIcon></th>
+                    <th pSortableColumn="activo" style="min-width:10rem">Validado <p-sortIcon field="activo"></p-sortIcon></th>
+                    <th></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-usuario>
+                <tr>
+                    <td>
+                        <p-tableCheckbox [value]="usuario"></p-tableCheckbox>
+                    </td>
+                    <td>{{ usuario.nombre }}</td>
+                    <td>{{ usuario.email }}</td>
+                    <td>{{ usuario.perfil.descripcion }}</td>
+                    <td>{{ usuario.validado ? "Sí" : "No"}}</td>
+                    <td>{{ usuario.activo ? "Sí" : "No"}}</td>
+                    <td>
+                        <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="edit(usuario)"></button>
+                        <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="delete(usuario)"></button>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="summary">
+                <div class="flex align-items-center justify-content-between">En total hay {{ usuarios ? usuarios.length : 0 }} usuarios.</div>
+            </ng-template>
+        </p-table>
+    </div>
+
+</div>

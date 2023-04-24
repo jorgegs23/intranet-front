@@ -1,0 +1,116 @@
+<div class="container">
+    <p-toolbar styleClass="mt-4 mb-4 gap-2">
+        <ng-template pTemplate="left">
+            <h2>Detalle de usuario</h2>
+        </ng-template>
+    
+        <ng-template pTemplate="right">
+            <button pButton pRipple [label]="'Volver'" icon="pi pi-arrow-left" class="mr-2" (click)="volver()"></button>
+            <button *ngIf="this.op == this.OPS.NEW" pButton pRipple 
+                [label]="'Añadir usuario'" icon="pi pi-save" class="p-button-success" (click)="guardar()"></button>
+            <button *ngIf="this.op == this.OPS.EDIT" pButton pRipple 
+                [label]="'Editar usuario'" icon="pi pi-save" class="p-button-success" (click)="guardar()"></button>
+        </ng-template>
+    </p-toolbar>
+    
+    <form *ngIf="cargaInicial" [formGroup]="usuarioForm" (ngOnSumit)="guardar()" class="formgrid grid">
+        
+        <div class="col-12 md:col-4 md:mb-5">
+            <span class="p-float-label">
+                <input pInputText id="login" formControlName="login" />
+                <label htmlFor="login">Login *</label>
+            </span>
+        </div>
+
+        <div class="field col-12 md:col-4 md:mb-5">
+            <span class="p-float-label">
+                <input pInputText type="password" id="pass" formControlName="pass" />
+                <label htmlFor="pass">Contraseña</label>
+            </span>
+        </div>
+
+        <div class="field col-12 md:col-4 md:mb-5"></div>
+
+        <div class="field col-12 md:col-4 md:mb-5">
+            <span class="p-float-label">
+                <input pInputText id="nombre" formControlName="nombre" />
+                <label htmlFor="nombre">Nombre</label>
+            </span>
+        </div>
+        <div class="field col-12 md:col-4 md:mb-5">
+            <span class="p-float-label">
+                <input pInputText id="apellido1" formControlName="apellido1" />
+                <label htmlFor="apellido1">Primer apellido</label>
+            </span>
+        </div>
+        
+
+        <div class="field col-12 md:col-4 md:mb-5">
+            <span class="p-float-label">
+                <input pInputText id="apellido2" formControlName="apellido2" />
+                <label htmlFor="apellido2">Segundo apellido</label>
+            </span>
+        </div>
+
+        <div class="field col-12 md:col-4 md:mb-5">
+            <span class="p-float-label">
+                <input pInputText id="docIdentidad" formControlName="docIdentidad" />
+                <label htmlFor="docIdentidad">Documento</label>
+            </span>
+        </div>
+
+        <div class="field col-12 md:col-4 md:mb-5">
+            <span class="p-float-label">
+                <input pInputText id="email" formControlName="email" />
+                <label htmlFor="email">Email</label>
+            </span>
+        </div>
+        
+        <div class="field col-12 md:col-4 md:mb-5">
+            <span class="p-float-label">
+                <p-dropdown [options]="perfiles" formControlName="perfil" optionLabel="descripcion" inputId="float-label"></p-dropdown>
+                <label for="float-label">Perfil</label>
+              </span>
+        </div>
+
+        <div class="field col-12 md:col-4 md:mb-5">
+            <span class="p-float-label">
+                <input pInputText id="telefono" formControlName="telefono" />
+                <label htmlFor="telefono">Telefono</label>
+            </span>
+        </div>
+
+        <div class="field col-12 md:col-4 md:mb-5">
+            <span class="p-float-label">
+                <input pInputText id="municipio" formControlName="municipio" />
+                <label htmlFor="municipio">Municipio</label>
+            </span>
+        </div>
+
+        <div class="field col-12 md:col-4 md:mb-5">
+            <span class="p-float-label">
+                <input pInputText id="direccion" formControlName="direccion" />
+                <label htmlFor="direccion">Dirección</label>
+            </span>
+        </div>
+
+        <div class="field col-12 md:col-4 md:mb-5">
+            <span class="p-float-label">
+                <p-dropdown [options]="opcionesSiONo" formControlName="validado" optionLabel="text" inputId="float-label"></p-dropdown>
+                <label for="float-label">Validado</label>
+              </span>
+        </div>
+        <div class="field col-12 md:col-4 md:mb-5">
+            <span class="p-float-label">
+                <p-dropdown [options]="opcionesSiONo" formControlName="activo"  optionLabel="text" inputId="float-label"></p-dropdown>
+                <label for="float-label">Activo</label>
+              </span>
+        </div>
+        <!-- <div *ngFor="let opcion of opcionesSiONo" class="field-checkbox">
+            <p-radioButton [inputId]="opcion.value" [value]="activo" formControlName="activo"></p-radioButton>
+            <label [for]="opcion.text" class="ml-2">{{ opcion.text }}</label>
+        </div> -->
+
+    </form>
+
+</div>

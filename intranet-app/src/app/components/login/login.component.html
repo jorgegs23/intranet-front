@@ -1,0 +1,26 @@
+<div class="container">
+    <div class="flex md:align-items-center justify-content-center mx-auto">
+        <div>
+          <h1>{{title}}</h1>
+          <div class="m-auto flex flex-column">
+            <span class="p-float-label mb-4">
+              <input id="user" type="text" [(ngModel)]="user" pInputText class="w-full">
+              <label for="user">Usuario</label>
+            </span>
+        
+            <span class="p-float-label mb-4">
+              <input id="pass" type="password" [(ngModel)]="pass" pInputText class="w-full">
+              <label for="pass">Contraseña</label>
+            </span>
+        
+            <button type="button" pButton class="p-button-primary" (click)="login()" label="Login"></button>
+      
+            
+            
+            <p-messages [(value)]="messages" >
+            </p-messages>
+          </div>
+        </div>
+      </div>
+</div>
+  
