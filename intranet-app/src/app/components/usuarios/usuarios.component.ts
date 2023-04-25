@@ -6,6 +6,7 @@ import { Table } from 'primeng/table';
 import { Perfil } from 'src/app/models/perfil.model';
 import { Usuario } from 'src/app/models/usuario.model';
 import { UsuariosService } from 'src/app/services/usuarios.service';
+import { ObjectResponse } from 'src/app/utils/backend-service';
 
 @Component({
   selector: 'app-usuarios',
@@ -49,25 +50,20 @@ export class UsuariosComponent implements OnInit{
   }
 
   getUsuarios(){
-    this.usuariosService.getAllUsuarios().subscribe(
-      (response: Usuario[]) => {
-        this.usuarios = response;
-        console.log(response)
-      }, (error: HttpErrorResponse) => {
+    this.usuarios = [];
+    this.usuariosService.getAllUsuarios().subscribe({
+      next: (response: ObjectResponse<Usuario[]>) => {
+        if (response.success){
+          this.usuarios = response.message;
+          console.log(response)
+        } else {
+          this.messages = [{ severity: 'error', summary: 'Error', detail: response.error }];  
+        }   
+      },
+      error: (error: HttpErrorResponse) => {
         this.messages = [{ severity: 'error', summary: 'Error', detail: 'Error al obtener el listado de usuarios' }];  
       }
-    );
-  }
-
-  getUsuarioById(){
-    this.usuariosService.getUsuarioById(1).subscribe(
-      (response: Usuario) => {
-        //this.usuarios = response;
-        console.log(response)
-      }, (error: HttpErrorResponse) => {
-        
-      }
-    );
+    });
   }
 
   add(){
@@ -75,7 +71,7 @@ export class UsuariosComponent implements OnInit{
   }
 
   edit(usuario: Usuario){
-
+    this.router.navigate(['/usuarios-detail', usuario.id]);
   }
 
   deleteSelected(){
@@ -83,7 +79,23 @@ export class UsuariosComponent implements OnInit{
   }
 
   delete(usuario: Usuario){
-
+    if (usuario.id){
+      this.usuariosService.deleteUsuario(usuario.id).subscribe({
+        next: (response) => {
+          if (response.success){
+            this.messages = [{ severity: 'success', summary: 'Ok', detail: response.message }]; 
+            this.getUsuarios();
+          } else {
+            this.messages = [{ severity: 'error', summary: 'Error', detail: response.error }];
+          }
+        },
+        error: (error: HttpErrorResponse) => {
+          debugger
+          this.messages = [{ severity: 'error', summary: 'Error', detail: 'Error al eliminar el usuario' }];  
+          console.log('Error al eliminar el usaurio: ' + error)
+        }
+      });
+    }  
   }
 
 }

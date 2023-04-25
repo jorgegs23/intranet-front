@@ -8,6 +8,7 @@ import { Perfil } from 'src/app/models/perfil.model';
 import { Usuario } from 'src/app/models/usuario.model';
 import { MasterDataService } from 'src/app/services/master-data.service';
 import { UsuariosService } from 'src/app/services/usuarios.service';
+import { ObjectResponse } from 'src/app/utils/backend-service';
 import { OPERACION } from 'src/app/utils/constants';
 
 @Component({
@@ -67,7 +68,7 @@ export class UsuariosDetailComponent implements OnInit {
       if (params && params['idUsuario']) {
         this.op = this.OPS.EDIT;
         this.idUsuario = params['idUsuario'];    
-        //this.fillForm(params['idUsuario']);
+        this.getUsuario();
       } else {
         this.op = this.OPS.NEW;
         this.cargaInicial = true;
@@ -76,15 +77,36 @@ export class UsuariosDetailComponent implements OnInit {
     }); 
   }
 
+  getUsuario(){
+    this.usuariosService.getUsuarioById(this.idUsuario).subscribe({
+      next: (response) =>{
+        if (response.success){
+          this.usuario =  response.message;
+          this.fillForm();
+          this.cargaInicial = true;
+          this.router.navigate(['/usuarios-detail', this.usuario.id]);
+        } else {
+          this.messages = [{ severity: 'error', summary: 'Error', detail: response.error }]; 
+        }
+        
+      },
+      error: (error: HttpErrorResponse) => {
+        this.messages = [{ severity: 'error', summary: 'Error', detail: 'Error al obtener el usuario' }];  
+        console.log('Error al obtener el usaurio: ' + error)
+        }
+    })
+  }
+
   getPerfiles(){
-    this.masterDataService.getAllPerfiles().subscribe(
-      (response: Perfil[]) => {
+    this.masterDataService.getAllPerfiles().subscribe({
+      next: (response: Perfil[]) => {
         this.perfiles = response;
         console.log(response)
-      }, (error: HttpErrorResponse) => {
+      },
+      error: (error: HttpErrorResponse) => {
         this.messages = [{ severity: 'error', summary: 'Error', detail: 'Error al obtener el listado de usuarios' }];  
       }
-    );
+    });
   }
 
   fillForm() {
@@ -97,7 +119,7 @@ export class UsuariosDetailComponent implements OnInit {
       apellido2: [this.usuario?.apellido2 ? this.usuario.apellido2 : null,],
       docIdentidad: [this.usuario?.docIdentidad ? this.usuario.docIdentidad : null,],
       email: [this.usuario?.email ? this.usuario.email : null,],
-      perfil: [this.usuario?.perfil?.perfil ? this.usuario.perfil.perfil : null,],
+      perfil: [this.usuario?.perfil ? this.usuario.perfil : null,],
       telefono: [this.usuario?.telefono ? this.usuario.telefono : null,],
       municipio: [this.usuario?.municipio ? this.usuario.municipio : null,],
       direccion: [this.usuario?.direccion ? this.usuario.direccion : null,],
@@ -111,7 +133,6 @@ export class UsuariosDetailComponent implements OnInit {
       this.messages = [{ severity: 'error', summary: 'Error', detail: 'Hay errores en el formulario' }];  
     } 
     this.usuario = this.usuarioForm.getRawValue() as Usuario;
-    debugger
     if (this.usuarioForm.get('activo')?.value == 'S'){
       this.usuario.activo = true;
     } else {
@@ -122,13 +143,41 @@ export class UsuariosDetailComponent implements OnInit {
     } else {
       this.usuario.validado = false;
     }
-    this.usuariosService.addUsuario(this.usuario).subscribe(
-      (response: Usuario) => {
-        this.messages = [{ severity: 'success', summary: 'Ok', detail: 'Usuario insertado' }]; 
-        //this.router.navigate['/usuarios-detail/${this.usuario.id}'];
-      },
 
-    )
+    if(this.op == this.OPS.NEW){
+      this.usuariosService.addUsuario(this.usuario).subscribe({
+        next: (response) => {
+          if (response.success){
+            this.messages = [{ severity: 'success', summary: 'Ok', detail: 'Usuario insertado' }]; 
+            //this.router.navigate['/usuarios-detail/${this.usuario.id}'];
+          } else {
+            this.messages = [{ severity: 'error', summary: 'Error', detail: response.error }]; 
+          }
+          //this.router.navigate['/usuarios-detail/${this.usuario.id}'];
+        },
+        error: (error: HttpErrorResponse) => {
+          this.messages = [{ severity: 'error', summary: 'Error', detail: 'Error al guardar el usaurio' }];  
+          console.log('Error al guardar: ' + error)
+        }
+      });
+    } else if (this.op = this.OPS.EDIT){
+      this.usuariosService.editUsuario(this.usuario).subscribe({
+        next: (response) => {
+          if (response.success){
+            this.messages = [{ severity: 'success', summary: 'Ok', detail: response.message }]; 
+          } else {
+            this.messages = [{ severity: 'error', summary: 'Error', detail: response.error }];
+          }
+          
+          //this.router.navigate['/usuarios-detail/${this.usuario.id}'];
+        },
+        error: (error: HttpErrorResponse) => {
+          this.messages = [{ severity: 'error', summary: 'Error', detail: 'Error al guardar el usaurio' }];  
+          console.log('Error al guardar: ' + error)
+        }
+      });
+    }
+   
 
     console.log(this.usuarioForm);
     

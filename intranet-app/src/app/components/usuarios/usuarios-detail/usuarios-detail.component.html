@@ -13,6 +13,8 @@
         </ng-template>
     </p-toolbar>
     
+    <p-messages [(value)]="messages" ></p-messages>
+    
     <form *ngIf="cargaInicial" [formGroup]="usuarioForm" (ngOnSumit)="guardar()" class="formgrid grid">
         
         <div class="col-12 md:col-4 md:mb-5">
