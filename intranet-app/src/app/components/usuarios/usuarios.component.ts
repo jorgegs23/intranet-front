@@ -5,6 +5,7 @@ import { Message } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { Perfil } from 'src/app/models/perfil.model';
 import { Usuario } from 'src/app/models/usuario.model';
+import { MasterDataService } from 'src/app/services/master-data.service';
 import { UsuariosService } from 'src/app/services/usuarios.service';
 import { ObjectResponse } from 'src/app/utils/backend-service';
 
@@ -38,15 +39,29 @@ export class UsuariosComponent implements OnInit{
 
   constructor(
     private usuariosService: UsuariosService,
+    private masterDataService: MasterDataService,
     private router: Router
   ){}
 
   ngOnInit(): void {
     this.getUsuarios();
+    this.getPerfiles();
   }
 
   applyFilterGlobal($event: Event, stringVal: string) {
     this.dt!.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
+  }
+
+  getPerfiles(){
+    this.masterDataService.getAllPerfiles().subscribe({
+      next: (response: Perfil[]) => {
+        this.perfiles = response;
+        console.log(response)
+      },
+      error: (error: HttpErrorResponse) => {
+        this.messages = [{ severity: 'error', summary: 'Error', detail: 'Error al obtener el listado de usuarios' }];  
+      }
+    });
   }
 
   getUsuarios(){

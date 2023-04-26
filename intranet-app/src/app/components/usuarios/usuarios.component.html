@@ -1,33 +1,52 @@
 <div class="container">
 
-    <div class="grid mt-4">
-        <div class="col-4">
-            <span class="p-float-label mb-4">
-                <input id="nombre" type="text" [(ngModel)]="nombre" pInputText class="w-full">
-                <label for="nombre">Nombte o apellidos</label>
-              </span>
-        </div>
-        <div class="col">
-            <span class="p-float-label">
-                <p-dropdown [options]="perfiles" [(ngModel)]="perfil" optionLabel="text" inputId="float-label"></p-dropdown>
-                <label for="float-label">Perfil</label>
-              </span>
-        </div>
-        <div class="col">
-            <span class="p-float-label">
-                <p-dropdown [options]="opcionesSiONo" [(ngModel)]="validado" optionLabel="text" inputId="float-label"></p-dropdown>
-                <label for="float-label">Validado</label>
-              </span>
-        </div>
-        <div class="col">
-            <span class="p-float-label">
-                <p-dropdown [options]="opcionesSiONo" [(ngModel)]="activo"  optionLabel="text" inputId="float-label"></p-dropdown>
-                <label for="float-label">Activo</label>
-              </span>
-        </div>
-    </div>
+    <p-accordion styleClass="my-4 w-full">
+        <p-accordionTab>
+            <ng-template pTemplate="header">
+                <div class="flex align-items-center">
+                    <i class="pi pi-search mr-2"></i>
+                    <span class="vertical-align-middle">Filtros</span>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="content">
 
-    <p-toolbar styleClass="mb-4 gap-2">
+                    <div class="grid gap-4">
+                        <div class="md:col-3 lg:col-4">
+                            <span class="p-float-label">
+                                <input id="nombre" type="text" [(ngModel)]="nombre" pInputText class="w-full">
+                                <label for="nombre">Nombre o apellidos</label>
+                              </span>
+                        </div>
+                        <div class="md:col-3 lg:col-2">
+                            <span class="p-float-label">
+                                <p-dropdown [options]="perfiles" [(ngModel)]="perfil" optionLabel="descripcion" inputId="float-label"></p-dropdown>
+                                <label for="float-label">Perfil</label>
+                              </span>
+                        </div>
+                        <div class="md:col-2 lg:col-2">
+                            <span class="p-float-label">
+                                <p-dropdown [options]="opcionesSiONo" [(ngModel)]="validado" optionLabel="text" inputId="float-label"></p-dropdown>
+                                <label for="float-label">Validado</label>
+                              </span>
+                        </div>
+                        <div class="md:col-1 lg:col-2">
+                            <span class="p-float-label">
+                                <p-dropdown [options]="opcionesSiONo" [(ngModel)]="activo"  optionLabel="text" inputId="float-label"></p-dropdown>
+                                <label for="float-label">Activo</label>
+                              </span>
+                        </div>     
+                    </div>
+                    <div class="flex align-items-center justify-content-end">
+                        <button pButton pRipple label="Aplicar filtros" icon="pi pi-search" class="p-button mt-2" (click)="add()"></button>              
+                    </div>
+
+                
+               
+            </ng-template>
+        </p-accordionTab>
+    </p-accordion>
+
+    <!-- <p-toolbar styleClass="mb-4 gap-2">
         <ng-template pTemplate="left">
             <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2" (click)="add()"></button>
             <button pButton pRipple [label]="'delete'" icon="pi pi-trash" class="p-button-danger" (click)="deleteSelected()" [disabled]="!selectedItems || !selectedItems.length"></button>
@@ -36,7 +55,7 @@
         <ng-template pTemplate="right">
             <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"></button>
         </ng-template>
-    </p-toolbar>
+    </p-toolbar> -->
    
     <p-messages [(value)]="messages" ></p-messages>
 
@@ -61,6 +80,10 @@
                         <i class="pi pi-search"></i>
                         <input pInputText type="text" (input)="applyFilterGlobal($event, 'contains')" placeholder="Search..." />
                     </span>
+                    <div class="flex align-items-center justify-content-between gap-2">
+                        <button pButton pRipple label="Nuevo Usuario" icon="pi pi-plus" class="p-button-success mr-2" (click)="add()"></button>
+                        <button pButton pRipple [label]="'Eliminar'" icon="pi pi-trash" class="p-button-danger" (click)="deleteSelected()" [disabled]="!selectedItems || !selectedItems.length"></button>
+                    </div>
                 </div>
             </ng-template>
             <ng-template pTemplate="header">
@@ -87,8 +110,8 @@
                     <td>{{ usuario.validado ? "Sí" : "No"}}</td>
                     <td>{{ usuario.activo ? "Sí" : "No"}}</td>
                     <td>
-                        <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="edit(usuario)"></button>
-                        <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="delete(usuario)"></button>
+                        <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-warning mr-2" (click)="edit(usuario)"></button>
+                        <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="delete(usuario)"></button>
                     </td>
                 </tr>
             </ng-template>
