@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Message } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { Perfil } from 'src/app/models/perfil.model';
-import { Usuario } from 'src/app/models/usuario.model';
+import { FiltroUsuario, Usuario } from 'src/app/models/usuario.model';
 import { MasterDataService } from 'src/app/services/master-data.service';
 import { UsuariosService } from 'src/app/services/usuarios.service';
 import { ObjectResponse } from 'src/app/utils/backend-service';
@@ -22,9 +22,9 @@ export class UsuariosComponent implements OnInit{
 
   
   nombre: string = '';
-  perfil: string = '';
-  validado: string = '';
-  activo: string = '';
+  perfil = {perfil: undefined,  descripcion: 'Todos'}
+  validado = {text: 'Todos', value: undefined};
+  activo = {text: 'Todos', value: undefined};
 
   selectedItems: Usuario[] = [];
   
@@ -32,7 +32,7 @@ export class UsuariosComponent implements OnInit{
   usuarios: Usuario[] = [];
 
   opcionesSiONo = [
-    {text: 'Todos', value: ''},
+    {text: 'Todos', value: undefined},
     {text: 'Si', value: true},
     {text: 'No', value: false}
   ];
@@ -57,6 +57,10 @@ export class UsuariosComponent implements OnInit{
       next: (response: Perfil[]) => {
         this.perfiles = response;
         console.log(response)
+        this.perfiles.unshift({
+          perfil: undefined,
+          descripcion: 'Todos'
+        })
       },
       error: (error: HttpErrorResponse) => {
         this.messages = [{ severity: 'error', summary: 'Error', detail: 'Error al obtener el listado de usuarios' }];  
@@ -81,6 +85,15 @@ export class UsuariosComponent implements OnInit{
     });
   }
 
+  filtrar(){
+    let filtro = {} as FiltroUsuario ;
+    if (this.nombre != '') filtro.nombre = this.nombre;
+    if (this.perfil?.perfil != null && this.perfil.perfil != undefined) filtro.perfil = this.perfil.perfil;
+    if (this.activo.value != undefined) filtro.activo = this.activo.value;
+    if (this.validado.value != undefined) filtro.validado = this.validado.value;
+    console.log(filtro);
+  }
+
   add(){
     this.router.navigate(['/usuarios-detail']);
   }
@@ -90,7 +103,6 @@ export class UsuariosComponent implements OnInit{
   }
 
   deleteSelected(){
-
   }
 
   delete(usuario: Usuario){

@@ -14,6 +14,14 @@ export interface Usuario{
     direccion?: string,
     municipio?: string,
     activo?: Boolean,
-    validado?: Boolean
+    validado?: Boolean,
     perfil?: Perfil
+}
+
+export interface FiltroUsuario{
+    nombre?: string,
+    perfil?: string,
+     activo?: Boolean,
+    validado?: Boolean
+    
 }
