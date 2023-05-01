@@ -22,6 +22,8 @@ import { ToolbarModule } from 'primeng/toolbar';
 import { AccordionModule } from 'primeng/accordion';
 import { UsuariosDetailComponent } from './components/usuarios/usuarios-detail/usuarios-detail.component';
 import { RadioButtonModule } from 'primeng/radiobutton';
+import { PaginatorModule } from 'primeng/paginator';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 @NgModule({
     declarations: [
@@ -50,7 +52,9 @@ import { RadioButtonModule } from 'primeng/radiobutton';
         ToolbarModule,
         AccordionModule,
         ReactiveFormsModule,
-        RadioButtonModule
+        RadioButtonModule,
+        PaginatorModule,
+        ConfirmDialogModule
     ]
 })
 export class AppModule { }

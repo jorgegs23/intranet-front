@@ -21,7 +21,9 @@ export interface Usuario{
 export interface FiltroUsuario{
     nombre?: string,
     perfil?: string,
-     activo?: Boolean,
-    validado?: Boolean
+    activo?: Boolean,
+    validado?: Boolean,
+    itemsPorPagina?: number,
+    pagina?: number
     
 }
