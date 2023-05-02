@@ -34,7 +34,7 @@ export class UsuariosService {
     return this.http.put<ObjectResponse<string>>(`${this.apiServerUrl}/usuarios/edit`, usuario);
   }
 
-  public deleteUsuario(id: Number): Observable<ObjectResponse<string>> {
+  public deleteUsuarios(id: Number[]): Observable<ObjectResponse<string>> {
     return this.http.delete<ObjectResponse<string>>(`${this.apiServerUrl}/usuarios/delete/${id}`);
   }
 }

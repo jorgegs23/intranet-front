@@ -33,6 +33,7 @@ export class UsuariosComponent implements OnInit{
   first: number = 0;
 
   selectedItems: Usuario[] = [];
+  idsUsuariosEliminar: any[] = [];
   
   perfiles: any[] = [];
   usuarios: Usuario[] = [];
@@ -114,7 +115,7 @@ export class UsuariosComponent implements OnInit{
           if (response.message.paginacion){
             //this.itemsPorPagina = response.message.paginacion.itemPerPage;
             this.totalItems = response.message.paginacion.total;
-            this.pagina = response.message.paginacion.paginas;
+            //this.pagina = response.message.paginacion.paginas;
           }
           console.log(response)
         } else {
@@ -145,40 +146,63 @@ export class UsuariosComponent implements OnInit{
   }
 
   deleteSelected(){
+    if (this.selectedItems.length > 0){
+      this.idsUsuariosEliminar = [];
+      this.selectedItems.forEach(item=> this.idsUsuariosEliminar.push(item.id));
+      let content = (this.idsUsuariosEliminar.length > 1 ? 'Van a ser eliminados ' + this.idsUsuariosEliminar.length + ' usuarios' : 
+        'Va a ser eliminado ' + this.idsUsuariosEliminar.length  + ' usuario') + ', esta acción no se puede deshacer ¿Estás seguro?';
+      this.confirmationService.confirm({
+        message: content,
+        header: 'Eliminación de usuario',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => {
+            this.deleteUsuario();
+        },
+        reject: (type: any) => {
+          //this.messages = [{ severity: 'info', summary: 'Info', detail: 'Borrado cancelado' }]; 
+        }
+      });
+    }
   }
 
   delete(usuario: Usuario){
     if (usuario.id){
+      this.idsUsuariosEliminar.push(usuario.id);
       this.confirmationService.confirm({
-        message: 'El usuario "' + usuario.nombre + '" va a ser eliminado, esta acción no se puede deshacer ¿Estás seguro?',
+        message: 'Va a ser eliminado el usuario "' + usuario.nombre + '", esta acción no se puede deshacer ¿Estás seguro?',
         header: 'Eliminación de usuario',
         icon: 'pi pi-exclamation-triangle',
         accept: () => {
-            this.deleteUsuario(usuario.id);
+            this.deleteUsuario();
         },
         reject: (type: any) => {
-          this.messages = [{ severity: 'info', summary: 'Info', detail: 'Borrado cancelado' }]; 
+          //this.messages = [{ severity: 'info', summary: 'Info', detail: 'Borrado cancelado' }]; 
         }
-    });
+      });
     }  
   }
 
-  deleteUsuario(id: any){
-    this.usuariosService.deleteUsuario(id).subscribe({
-      next: (response) => {
-        if (response.success){
-          this.messages = [{ severity: 'success', summary: 'Ok', detail: response.message }]; 
-          this.filtrar(false);
-        } else {
-          this.messages = [{ severity: 'error', summary: 'Error', detail: response.error }];
+  deleteUsuario(){
+    debugger
+      this.usuariosService.deleteUsuarios(this.idsUsuariosEliminar).subscribe({
+        next: (response) => {
+          if (response.success){
+            this.idsUsuariosEliminar = [];
+            this.selectedItems = [];
+            this.messages = [{ severity: 'success', summary: 'Ok', detail: response.message }]; 
+            this.filtrar(false);         
+          } else {
+            this.messages = [{ severity: 'error', summary: 'Error', detail: response.error }];
+          }
+        },
+        error: (error: HttpErrorResponse) => {
+          debugger
+          this.messages = [{ severity: 'error', summary: 'Error', detail: 'Error al eliminar el usuario' }];  
+          console.log('Error al eliminar el usaurio: ' + error)
         }
-      },
-      error: (error: HttpErrorResponse) => {
-        debugger
-        this.messages = [{ severity: 'error', summary: 'Error', detail: 'Error al eliminar el usuario' }];  
-        console.log('Error al eliminar el usaurio: ' + error)
-      }
-    });
+      });
+ 
+      
   }
 
   onPageChange(event: any){

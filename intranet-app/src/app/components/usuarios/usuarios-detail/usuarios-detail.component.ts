@@ -31,9 +31,11 @@ export class UsuariosDetailComponent implements OnInit {
   activo: string = '';
 
   opcionesSiONo = [
-    {text: 'No', value: 'N'},
-    {text: 'Si', value: 'S'}
+    {text: 'No', value: false},
+    {text: 'Si', value: true}
   ];
+
+  opcionNo =  {text: 'No', value: false};
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -123,8 +125,8 @@ export class UsuariosDetailComponent implements OnInit {
       telefono: [this.usuario?.telefono ? this.usuario.telefono : null,],
       municipio: [this.usuario?.municipio ? this.usuario.municipio : null,],
       direccion: [this.usuario?.direccion ? this.usuario.direccion : null,],
-      validado: [this.usuario?.validado ? this.usuario.validado : null,],
-      activo: [this.usuario?.activo ? this.usuario.activo : null,]
+      validado: [this.usuario?.validado ? this.opcionesSiONo.find(o => o.value == this.usuario?.validado) : this.opcionNo,],
+      activo: [this.usuario?.activo ? this.opcionesSiONo.find(o => o.value == this.usuario?.activo) : this.opcionNo,]
     })
   }
 
@@ -133,17 +135,23 @@ export class UsuariosDetailComponent implements OnInit {
       this.messages = [{ severity: 'error', summary: 'Error', detail: 'Hay errores en el formulario' }];  
     } 
     this.usuario = this.usuarioForm.getRawValue() as Usuario;
-    if (this.usuarioForm.get('activo')?.value == 'S'){
-      this.usuario.activo = true;
-    } else {
-      this.usuario.activo = false;
-    }
-    if (this.usuarioForm.get('validado')?.value == 'S'){
-      this.usuario.validado = true;
-    } else {
-      this.usuario.validado = false;
-    }
-
+    if (this.usuarioForm.get('activo')?.value){
+      let activo = this.usuarioForm.get('activo')?.value;
+      if (activo.value){
+        this.usuario.activo = true;
+      } else {
+        this.usuario.activo = false;
+      }
+    } else this.usuario.activo = false;
+    if (this.usuarioForm.get('validado')?.value){
+      let validado = this.usuarioForm.get('validado')?.value;
+      if (validado.value){
+        this.usuario.validado = true;
+      } else {
+        this.usuario.validado = false;
+      }
+    } else this.usuario.validado = false;
+     
     if(this.op == this.OPS.NEW){
       this.usuariosService.addUsuario(this.usuario).subscribe({
         next: (response) => {
