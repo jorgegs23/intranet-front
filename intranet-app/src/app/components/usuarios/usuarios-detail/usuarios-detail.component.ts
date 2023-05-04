@@ -3,12 +3,10 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Message } from 'primeng/api/public_api';
-import { AnonymousSubject } from 'rxjs/internal/Subject';
 import { Perfil } from 'src/app/models/perfil.model';
 import { Usuario } from 'src/app/models/usuario.model';
 import { MasterDataService } from 'src/app/services/master-data.service';
 import { UsuariosService } from 'src/app/services/usuarios.service';
-import { ObjectResponse } from 'src/app/utils/backend-service';
 import { OPERACION } from 'src/app/utils/constants';
 
 @Component({
@@ -45,23 +43,7 @@ export class UsuariosDetailComponent implements OnInit {
     private masterDataService: MasterDataService
   ){
     this.usuarioForm=this.formBuilder.group({});
-      // this.usuarioForm=this.formBuilder.group({
-      //   id: [null],
-      //   login: [null, [Validators.required]],
-      //   pass: [null],
-      //   nombre: [null],
-      //   apellido1: [null],
-      //   apellido2: [null],
-      //   docIdentidad: [null],
-      //   email: [null],
-      //   perfil: [null],
-      //   telefono: [null],
-      //   municipio: [null],
-      //   direccion: [null],
-      //   validado: [false],
-      //   activo: [false]
-      // })
-      this.fillForm();
+    this.fillForm();
   }
 
   ngOnInit(): void {
@@ -133,6 +115,7 @@ export class UsuariosDetailComponent implements OnInit {
   guardar(){
     if (this.usuarioForm.invalid){
       this.messages = [{ severity: 'error', summary: 'Error', detail: 'Hay errores en el formulario' }];  
+      return;
     } 
     this.usuario = this.usuarioForm.getRawValue() as Usuario;
     if (this.usuarioForm.get('activo')?.value){

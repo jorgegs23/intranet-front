@@ -1,0 +1,65 @@
+<div class="container">
+    <p-toolbar styleClass="mt-4 mb-4 gap-2">
+        <ng-template pTemplate="left">
+            <h2>Detalle de equipo</h2>
+        </ng-template>
+    
+        <ng-template pTemplate="right">
+            <button pButton pRipple [label]="'Volver'" icon="pi pi-arrow-left" class="mr-2" (click)="volver()"></button>
+            <button *ngIf="this.op == this.OPS.NEW" pButton pRipple 
+                [label]="'Añadir equipo'" icon="pi pi-save" class="p-button-success" (click)="guardar()"></button>
+            <button *ngIf="this.op == this.OPS.EDIT" pButton pRipple 
+                [label]="'Editar equipo'" icon="pi pi-save" class="p-button-success" (click)="guardar()"></button>
+        </ng-template>
+    </p-toolbar>
+    
+    <p-messages [(value)]="messages" ></p-messages>
+    
+    <form *ngIf="cargaInicial" [formGroup]="equipoForm" (ngOnSumit)="guardar()" class="formgrid grid">
+        
+        <div class="field col-12 md:col-4 md:mb-5">
+            <span class="p-float-label mx-4">
+                <input pInputText id="nombre" formControlName="nombre" class="w-full" />
+                <label htmlFor="nombre">Nombre *</label>
+            </span>
+        </div>
+
+        <div class="field col-12 md:col-4 md:mb-5">
+            <span class="p-float-label mx-4">
+                <p-dropdown [options]="categorias" formControlName="categoria" optionLabel="descripcion" inputId="float-label"></p-dropdown>
+                <label for="float-label">Categoría *</label>
+              </span>
+        </div>
+
+        <div class="field col-12 md:col-4 md:mb-5">
+            <span class="p-float-label mx-4">
+                <p-dropdown [options]="temporadas" formControlName="temporada" optionLabel="descripcion" inputId="float-label"></p-dropdown>
+                <label for="float-label">Temporada *</label>
+              </span>
+        </div>
+
+        <div class="field col-12 md:col-4 md:mb-5">
+            <span class="p-float-label mx-4">
+                <input pInputText id="municipio" formControlName="municipio" class="w-full"/>
+                <label htmlFor="municipio">Municipio *</label>
+            </span>
+        </div>
+
+        <div class="field col-12 md:col-4 md:mb-5">
+            <span class="p-float-label mx-4">
+                <input pInputText id="pabellon" formControlName="pabellon" class="w-full"/>
+                <label htmlFor="pabellon">Pabellón *</label>
+            </span>
+        </div>
+
+        <div class="field col-12 md:col-4 md:mb-5">
+            <span class="p-float-label mx-4">
+                <input pInputText id="direccion" formControlName="direccion" class="w-full"/>
+                <label htmlFor="direccion">Dirección *</label>
+            </span>
+        </div>
+
+    </form>
+
+</div>
+

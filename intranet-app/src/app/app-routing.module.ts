@@ -5,6 +5,9 @@ import { InicioComponent } from './components/inicio/inicio.component';
 import { LoginComponent } from './components/login/login.component';
 import { AppLayoutComponent } from './components/app-layout/app-layout.component';
 import { UsuariosDetailComponent } from './components/usuarios/usuarios-detail/usuarios-detail.component';
+import { TemporadasComponent } from './components/temporadas/temporadas.component';
+import { EquiposComponent } from './components/equipos/equipos.component';
+import { EquiposDetailComponent } from './components/equipos/equipos-detail/equipos-detail.component';
 
 const routes: Routes = [
   {
@@ -30,7 +33,23 @@ const routes: Routes = [
       {
         path: 'usuarios-detail/:idUsuario',
         component: UsuariosDetailComponent
-      }
+      },
+      {
+        path: 'temporadas',
+        component: TemporadasComponent
+      },
+      {
+        path: 'equipos',
+        component: EquiposComponent
+      },
+      {
+        path: 'equipos-detail',
+        component: EquiposDetailComponent
+      },
+      {
+        path: 'equipos-detail/:idEquipo',
+        component: EquiposDetailComponent
+      },
     ]
   }
 ]

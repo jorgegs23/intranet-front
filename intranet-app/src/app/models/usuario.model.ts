@@ -25,5 +25,4 @@ export interface FiltroUsuario{
     validado?: Boolean,
     itemsPorPagina?: number,
     pagina?: number
-    
 }

@@ -40,9 +40,30 @@ export class MenuComponent implements OnInit {
             routerLink: '/usuarios'
           },
           {
-            label: 'Nuevo',
+            label: 'Nuevo Usuario',
             icon: 'pi pi-fw pi-user-plus',
             routerLink: '/usuarios-detail'
+          }   
+        ]
+      },
+      {
+        label: 'Temporadas',
+        icon: 'pi pi-fw pi-calendar',
+        routerLink: '/temporadas'
+      },
+      {
+        label: 'Equipos',
+        icon: 'pi pi-fw pi-user',
+        items: [
+          {
+            label: 'Listado',
+            icon: 'pi pi-fw pi-users',
+            routerLink: '/equipos'
+          },
+          {
+            label: 'Nuevo Equipo',
+            icon: 'pi pi-fw pi-user-plus',
+            routerLink: '/equipos-detail'
           }   
         ]
       },

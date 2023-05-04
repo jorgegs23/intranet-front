@@ -1,0 +1,77 @@
+<div class="container">
+
+    <p-toolbar styleClass="mb-4 gap-2">
+        <ng-template pTemplate="left">
+            <button pButton pRipple label="Nueva temporada" icon="pi pi-plus" class="p-button-success mr-2" (click)="add()"></button>
+        </ng-template>
+    
+        <ng-template pTemplate="right">
+            <button pButton pRipple label="Abrir temporada" icon="pi pi-plus" class="p-button mr-2" (click)="abrir()" 
+            [disabled]="selectedItem != ultimaTemporada || selectedItem?.activa "></button>
+            <button pButton pRipple label="Cerrar temporada" icon="pi pi-trash" class="p-button-danger" (click)="cerrar()" 
+            [disabled]="selectedItem != ultimaTemporada || !selectedItem?.activa"></button>
+        </ng-template>
+    </p-toolbar>
+
+    <p-messages [(value)]="messages" ></p-messages>
+
+    <p-confirmDialog #cd [style]="{width: '50vw'}">
+        <ng-template pTemplate="footer">
+            <button type="button" pButton icon="pi pi-times" label="Cancelar" (click)="cd.reject()"></button>
+            <button type="button" pButton icon="pi pi-check" class="p-button-danger" label="Confirmar eliminación" (click)="cd.accept()"></button>
+        </ng-template>
+    </p-confirmDialog>
+
+    <div>
+        <p-table
+            #dt
+            [value]="temporadas"
+            [lazy]="false"
+            [rows]="temporadas.length"
+            [paginator]="false"
+            [globalFilterFields]="['descripcion', 'fechaInicio', 'fechaFin', 'activa']"
+            [tableStyle]="{ 'min-width': '75rem' }"
+            [(selection)]="selectedItem"
+            [rowHover]="true"
+            dataKey="id"
+            currentPageReportTemplate="Temporadas {first} - {last} de {totalRecords}"
+            [showCurrentPageReport]="true"
+        >
+            <ng-template pTemplate="caption">
+                <div class="flex align-items-center justify-content-between">
+                    <h3 class="m-0">Listado de temporadas</h3>
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-search"></i>
+                        <input pInputText type="text" (input)="applyFilterGlobal($event, 'contains')" placeholder="Search..." />
+                    </span>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width: 4rem">                     
+                    </th>
+                    <th pSortableColumn="descripcion">Descripción <p-sortIcon field="descripcion"></p-sortIcon></th>
+                    <th pSortableColumn="fechaInicio">Fecha inicio <p-sortIcon field="fechaInicio"></p-sortIcon></th>
+                    <th pSortableColumn="fechaFin">Fecha fin <p-sortIcon field="fechaFin"></p-sortIcon></th>
+                    <th pSortableColumn="validado">Activa <p-sortIcon field="activa"></p-sortIcon></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-temporada>
+                <tr>
+                    <td>
+                        <p-tableRadioButton [value]="temporada"></p-tableRadioButton >
+                    </td>
+                    <td>{{ temporada.descripcion }} </td>
+                    <td>{{ temporada.fechaIncio }}</td>
+                    <td>{{ temporada.fechaFin ? temporada.fechaFin : 'Sin finalizar' }}</td>
+                    <td>{{ temporada.activa ? "Sí" : "No"}}</td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="summary">
+                <div class="card flex justify-content-start">
+                    Hay un total de {{temporadas.length }} temporadas.
+                </div>  
+            </ng-template>
+        </p-table>
+    </div>
+</div>

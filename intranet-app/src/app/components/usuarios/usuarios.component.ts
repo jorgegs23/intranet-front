@@ -72,7 +72,7 @@ export class UsuariosComponent implements OnInit{
         })
       },
       error: (error: HttpErrorResponse) => {
-        this.messages = [{ severity: 'error', summary: 'Error', detail: 'Error al obtener el listado de usuarios' }];  
+        this.messages = [{ severity: 'error', summary: 'Error', detail: 'Error al obtener el listado de perfiles' }];  
       }
     });
   }
@@ -135,6 +135,7 @@ export class UsuariosComponent implements OnInit{
     this.perfil = {perfil: undefined,  descripcion: 'Todos'}
     this.validado = {text: 'Todos', value: undefined};
     this.activo = {text: 'Todos', value: undefined};
+    this.filtrar(true);
   }
 
   add(){
@@ -183,7 +184,6 @@ export class UsuariosComponent implements OnInit{
   }
 
   deleteUsuario(){
-    debugger
       this.usuariosService.deleteUsuarios(this.idsUsuariosEliminar).subscribe({
         next: (response) => {
           if (response.success){
@@ -196,9 +196,8 @@ export class UsuariosComponent implements OnInit{
           }
         },
         error: (error: HttpErrorResponse) => {
-          debugger
           this.messages = [{ severity: 'error', summary: 'Error', detail: 'Error al eliminar el usuario' }];  
-          console.log('Error al eliminar el usaurio: ' + error)
+          console.log('Error al eliminar el usuario: ' + error)
         }
       });
  

@@ -24,6 +24,9 @@ import { UsuariosDetailComponent } from './components/usuarios/usuarios-detail/u
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { PaginatorModule } from 'primeng/paginator';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { TemporadasComponent } from './components/temporadas/temporadas.component';
+import { EquiposComponent } from './components/equipos/equipos.component';
+import { EquiposDetailComponent } from './components/equipos/equipos-detail/equipos-detail.component';
 
 @NgModule({
     declarations: [
@@ -33,6 +36,9 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
         LoginComponent,
         AppLayoutComponent,
         UsuariosDetailComponent,
+        TemporadasComponent,
+        EquiposComponent,
+        EquiposDetailComponent,
     ],
     providers: [],
     bootstrap: [AppComponent],
