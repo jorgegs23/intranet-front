@@ -48,4 +48,8 @@ export class LoginComponent {
     );
   }
 
+  registro(){
+    this.router.navigate(['/registro']);
+  }
+
 }

@@ -8,8 +8,9 @@
               <label for="user">Usuario</label>
             </span>
         
-            <span class="p-float-label mb-4">
-              <input id="pass" type="password" [(ngModel)]="pass" pInputText class="w-full">
+            <span class="p-float-label mb-4 w-full">
+              <p-password [(ngModel)]="pass" [toggleMask]="true" class="w-full" [feedback]="false" class="w-full"></p-password>
+              <!-- <input id="pass" type="password" [(ngModel)]="pass" pInputText  class="w-full"> -->
               <label for="pass">Contraseña</label>
             </span>
         

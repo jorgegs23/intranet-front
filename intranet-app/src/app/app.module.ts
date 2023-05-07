@@ -33,7 +33,8 @@ import { DesignacionesComponent } from './components/designaciones/designaciones
 import { DesignacionesDetailComponent } from './components/designaciones/designaciones-detail/designaciones-detail.component';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { CalendarModule } from 'primeng/calendar';
-import { AnimateModule } from 'primeng/animate';
+import { PasswordModule } from 'primeng/password';
+import { InputNumberModule } from 'primeng/inputnumber';
 
 
 @NgModule({
@@ -75,6 +76,9 @@ import { AnimateModule } from 'primeng/animate';
         ConfirmDialogModule,
         AutoCompleteModule,
         CalendarModule,
+        PasswordModule,
+        InputNumberModule
+        
     ]
 })
 export class AppModule { }
