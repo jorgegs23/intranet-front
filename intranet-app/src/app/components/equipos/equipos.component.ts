@@ -65,7 +65,6 @@ export class EquiposComponent implements OnInit{
     this.masterDataService.getAllCategorias().subscribe({
       next: (response: Categoria[]) => {
         this.categorias = response;
-        console.log(response)
         this.categorias.unshift({
           categoria: undefined,
           descripcion: 'Todas'
@@ -120,7 +119,6 @@ export class EquiposComponent implements OnInit{
             this.totalItems = response.message.paginacion.total;
             //this.pagina = response.message.paginacion.paginas;
           }
-          console.log(response)
         } else {
           this.messages = [{ severity: 'error', summary: 'Error', detail: response.error }];  
         }
@@ -130,7 +128,7 @@ export class EquiposComponent implements OnInit{
         this.messages = [{ severity: 'error', summary: 'Error', detail: 'Error al obtener el listado de equipos' }];  
       }
     });
-    console.log(filtro);
+
   }
 
   limpiarFiltros(){
@@ -200,7 +198,6 @@ export class EquiposComponent implements OnInit{
         },
         error: (error: HttpErrorResponse) => {
           this.messages = [{ severity: 'error', summary: 'Error', detail: 'Error al eliminar el equipo' }];  
-          console.log('Error al eliminar el equipo: ' + error)
         }
       });
  
@@ -208,7 +205,6 @@ export class EquiposComponent implements OnInit{
   }
 
   onPageChange(event: any){
-    console.log(event);
     this.selectedItems = [];
     this.itemsPorPagina = event.rows;
     this.first = event.first;

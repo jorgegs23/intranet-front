@@ -27,6 +27,14 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TemporadasComponent } from './components/temporadas/temporadas.component';
 import { EquiposComponent } from './components/equipos/equipos.component';
 import { EquiposDetailComponent } from './components/equipos/equipos-detail/equipos-detail.component';
+import { PartidosComponent } from './components/partidos/partidos.component';
+import { PartidosDetailComponent } from './components/partidos/partidos-detail/partidos-detail.component';
+import { DesignacionesComponent } from './components/designaciones/designaciones.component';
+import { DesignacionesDetailComponent } from './components/designaciones/designaciones-detail/designaciones-detail.component';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { CalendarModule } from 'primeng/calendar';
+import { AnimateModule } from 'primeng/animate';
+
 
 @NgModule({
     declarations: [
@@ -39,6 +47,10 @@ import { EquiposDetailComponent } from './components/equipos/equipos-detail/equi
         TemporadasComponent,
         EquiposComponent,
         EquiposDetailComponent,
+        PartidosComponent,
+        PartidosDetailComponent,
+        DesignacionesComponent,
+        DesignacionesDetailComponent,
     ],
     providers: [],
     bootstrap: [AppComponent],
@@ -60,7 +72,9 @@ import { EquiposDetailComponent } from './components/equipos/equipos-detail/equi
         ReactiveFormsModule,
         RadioButtonModule,
         PaginatorModule,
-        ConfirmDialogModule
+        ConfirmDialogModule,
+        AutoCompleteModule,
+        CalendarModule,
     ]
 })
 export class AppModule { }

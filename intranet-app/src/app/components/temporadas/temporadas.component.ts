@@ -56,18 +56,6 @@ export class TemporadasComponent {
     });
   }
 
-  // rowsChecked(){
-  //   console.log('a')
-  //   this.posibleAbrir = false;
-  //   this.posibleCerrar = false;
-  //   if (this.selectedItems.length == 1){
-  //     let temporada = this.selectedItems[0];
-  //     this.idTemporada = temporada.id;
-  //     temporada.activa ? this.posibleCerrar = true : this.posibleAbrir = true;
-  //   }
-  // }
-
-
   add(){
     this.temporadasService.createTemporada().subscribe({
       next: (response: ObjectResponse<string>) => {

@@ -1,4 +1,4 @@
-import { Letras } from "@shared/utils/utils";
+import { Letras } from "../utils/utils";
 
 export class nombre{
     static validationNombre(nombre: string): boolean {

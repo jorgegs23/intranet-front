@@ -8,11 +8,19 @@ import { UsuariosDetailComponent } from './components/usuarios/usuarios-detail/u
 import { TemporadasComponent } from './components/temporadas/temporadas.component';
 import { EquiposComponent } from './components/equipos/equipos.component';
 import { EquiposDetailComponent } from './components/equipos/equipos-detail/equipos-detail.component';
+import { PartidosComponent } from './components/partidos/partidos.component';
+import { PartidosDetailComponent } from './components/partidos/partidos-detail/partidos-detail.component';
+import { DesignacionesComponent } from './components/designaciones/designaciones.component';
+import { DesignacionesDetailComponent } from './components/designaciones/designaciones-detail/designaciones-detail.component';
 
 const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent
+  },
+  {
+    path: 'registro',
+    component: UsuariosDetailComponent
   },
   {
     path: '',
@@ -28,6 +36,10 @@ const routes: Routes = [
       },
       {
         path: 'usuarios-detail',
+        component: UsuariosDetailComponent
+      },
+      {
+        path: 'area-personal',
         component: UsuariosDetailComponent
       },
       {
@@ -49,6 +61,30 @@ const routes: Routes = [
       {
         path: 'equipos-detail/:idEquipo',
         component: EquiposDetailComponent
+      },
+      {
+        path: 'partidos',
+        component: PartidosComponent
+      },
+      {
+        path: 'partidos-detail',
+        component: PartidosDetailComponent
+      },
+      {
+        path: 'partidos-detail/:idPartido',
+        component: PartidosDetailComponent
+      },
+      {
+        path: 'designaciones',
+        component: DesignacionesComponent
+      },
+      {
+        path: 'designaciones-detail',
+        component: DesignacionesDetailComponent
+      },
+      {
+        path: 'designaciones-detail/:idDesignacion',
+        component: DesignacionesDetailComponent
       },
     ]
   }

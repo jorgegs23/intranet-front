@@ -90,9 +90,9 @@
                         <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                     </th>
                     <th pSortableColumn="nombre">Nombre <p-sortIcon field="nombre"></p-sortIcon></th>
-                    <th pSortableColumn="email">Categoría <p-sortIcon field="email"></p-sortIcon></th>
-                    <th pSortableColumn="perfil.descripcion">Municipio <p-sortIcon field="perfil.descripcion"></p-sortIcon></th>
-                    <th pSortableColumn="validado">Temporada <p-sortIcon field="validado"></p-sortIcon></th>
+                    <th pSortableColumn="categoria.descripcion">Categoría <p-sortIcon field="categoria.descripcion"></p-sortIcon></th>
+                    <th pSortableColumn="municipio">Municipio <p-sortIcon field="municipio"></p-sortIcon></th>
+                    <th pSortableColumn="temporada.descripcion">Temporada <p-sortIcon field="temporada.descripcion"></p-sortIcon></th>
                     <th></th>
                 </tr>
             </ng-template>
@@ -113,7 +113,7 @@
             </ng-template>
             <ng-template pTemplate="summary">
                 <div class="card flex justify-content-between">
-                    <div class="flex align-items-center justify-content-between">{{ first + 1 }} - {{ (first + 1 + itemsPorPagina) >  totalItems ? totalItems : (first + 1 + itemsPorPagina)}} de {{totalItems}} equipos.</div>
+                    <div class="flex align-items-center justify-content-between">{{ totalItems != 0 ? first + 1 : '0'}} {{ (first + 1 + itemsPorPagina) >  totalItems ? totalItems : (first + 1 + itemsPorPagina)}} de {{totalItems}} equipos.</div>
                     <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="itemsPorPagina" [totalRecords]="totalItems" [rowsPerPageOptions]="PAGINACION_ITEMS_TABLA"></p-paginator>
                 </div>  
             </ng-template>

@@ -36,7 +36,7 @@ export class MenuComponent implements OnInit {
         items: [
           {
             label: 'Listado',
-            icon: 'pi pi-fw pi-users',
+            icon: 'pi pi-fw pi-user',
             routerLink: '/usuarios'
           },
           {
@@ -53,7 +53,7 @@ export class MenuComponent implements OnInit {
       },
       {
         label: 'Equipos',
-        icon: 'pi pi-fw pi-user',
+        icon: 'pi pi-fw pi-users',
         items: [
           {
             label: 'Listado',
@@ -67,6 +67,44 @@ export class MenuComponent implements OnInit {
           }   
         ]
       },
+      {
+        label: 'Partidos',
+        icon: 'pi pi-fw pi-tags',
+        items: [
+          {
+            label: 'Listado',
+            icon: 'pi pi-fw pi-tags',
+            routerLink: '/partidos'
+          },
+          {
+            label: 'Nuevo Partido',
+            icon: 'pi pi-fw pi-plus-circle',
+            routerLink: '/partidos-detail'
+          }   
+        ]
+      },
+      {
+        label: 'Designaciones',
+        icon: 'pi pi-fw pi-file-export',
+        items: [
+          {
+            label: 'Listado',
+            icon: 'pi pi-fw pi-file',
+            routerLink: '/designaciones'
+          },
+          {
+            label: 'Nueva Designación',
+            icon: 'pi pi-fw pi-file-edit',
+            routerLink: '/designaciones-detail'
+          }   
+        ]
+      },
+      {
+        label: 'Area Personal',
+        icon: 'pi pi-fw pi-user',
+        routerLink: '/area-personal'
+      },
+      
       {
         label: 'Salir',
         icon: 'pi pi-fw pi-power-off',
@@ -91,9 +129,13 @@ export class MenuComponent implements OnInit {
   changeTheme() {
     let estilo = ''
     if (this.tema){
-      estilo = 'md-dark-indigo';
+      // estilo = 'md-dark-indigo';
+      // estilo = 'bootstrap4-dark-blue';
+      estilo = 'dark';
     } else {
-      estilo = 'md-light-indigo';
+      // estilo = 'md-light-indigo';
+      // estilo = 'bootstrap4-light-blue';
+      estilo = 'light';
     }
     sessionStorage.setItem(SESION.TEMA, estilo);
     this.themeService.switchTheme(estilo);

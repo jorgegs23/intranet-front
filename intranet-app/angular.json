@@ -33,12 +33,12 @@
               "src/styles.scss",
               {
                 "input": "src/theme-md-light-indigo.scss",
-                "bundleName": "md-light-indigo",
+                "bundleName": "light",
                 "inject": false
               },
               {
                 "input": "src/theme-md-dark-indigo.scss",
-                "bundleName": "md-dark-indigo",
+                "bundleName": "dark",
                 "inject": false
               }
             ],

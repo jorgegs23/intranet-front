@@ -5,9 +5,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Message } from 'primeng/api/public_api';
 import { Perfil } from 'src/app/models/perfil.model';
 import { Usuario } from 'src/app/models/usuario.model';
+import { AuthService } from 'src/app/services/auth.service';
 import { MasterDataService } from 'src/app/services/master-data.service';
 import { UsuariosService } from 'src/app/services/usuarios.service';
-import { OPERACION } from 'src/app/utils/constants';
+import { OPERACION, SESION } from 'src/app/utils/constants';
 
 @Component({
   selector: 'app-usuarios-detail',
@@ -15,7 +16,7 @@ import { OPERACION } from 'src/app/utils/constants';
   styleUrls: ['./usuarios-detail.component.scss']
 })
 export class UsuariosDetailComponent implements OnInit {
-  
+
   messages: Message[] = [];
   OPS = OPERACION;
   op: OPERACION = OPERACION.NEW;
@@ -26,6 +27,7 @@ export class UsuariosDetailComponent implements OnInit {
   usuario: Usuario | undefined;
   
   cargaInicial = false;
+  opcionesAdmin = false;
   activo: string = '';
 
   opcionesSiONo = [
@@ -34,9 +36,11 @@ export class UsuariosDetailComponent implements OnInit {
   ];
 
   opcionNo =  {text: 'No', value: false};
+  mostrarVolver = true;
 
   constructor(
     private activatedRoute: ActivatedRoute,
+    private authService: AuthService,
     private formBuilder: FormBuilder,
     private router: Router,
     private usuariosService: UsuariosService,
@@ -48,17 +52,29 @@ export class UsuariosDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.getPerfiles();
-    this.activatedRoute.params.subscribe(params => {
-      if (params && params['idUsuario']) {
-        this.op = this.OPS.EDIT;
-        this.idUsuario = params['idUsuario'];    
-        this.getUsuario();
-      } else {
-        this.op = this.OPS.NEW;
-        this.cargaInicial = true;
-      }
-      
-    }); 
+    let url: string = this.router.url;
+    if (url.includes('registro')){
+      this.op = this.OPS.NEW;
+      this.cargaInicial = true;
+    } else if (url.includes('area-personal')){
+      this.mostrarVolver = false;
+      this.op = this.OPS.EDIT;
+      this.usuario = this.authService.getLoggedUser();
+      this.fillForm();
+      this.cargaInicial = true;
+    } else if (url.includes('usuarios')){
+      this.opcionesAdmin = true;
+      this.activatedRoute.params.subscribe(params => {
+        if (params && params['idUsuario']) {
+          this.op = this.OPS.EDIT;
+          this.idUsuario = params['idUsuario'];    
+          this.getUsuario();
+        } else {
+          this.op = this.OPS.NEW;
+          this.cargaInicial = true;
+        }
+      }); 
+    }
   }
 
   getUsuario(){
@@ -68,7 +84,6 @@ export class UsuariosDetailComponent implements OnInit {
           this.usuario =  response.message;
           this.fillForm();
           this.cargaInicial = true;
-          this.router.navigate(['/usuarios-detail', this.usuario.id]);
         } else {
           this.messages = [{ severity: 'error', summary: 'Error', detail: response.error }]; 
         }
@@ -76,16 +91,18 @@ export class UsuariosDetailComponent implements OnInit {
       },
       error: (error: HttpErrorResponse) => {
         this.messages = [{ severity: 'error', summary: 'Error', detail: 'Error al obtener el usuario' }];  
-        console.log('Error al obtener el usaurio: ' + error)
         }
     })
+  }
+
+  getUsuarioSesion(){
+    
   }
 
   getPerfiles(){
     this.masterDataService.getAllPerfiles().subscribe({
       next: (response: Perfil[]) => {
         this.perfiles = response;
-        console.log(response)
       },
       error: (error: HttpErrorResponse) => {
         this.messages = [{ severity: 'error', summary: 'Error', detail: 'Error al obtener el listado de usuarios' }];  
@@ -148,7 +165,6 @@ export class UsuariosDetailComponent implements OnInit {
         },
         error: (error: HttpErrorResponse) => {
           this.messages = [{ severity: 'error', summary: 'Error', detail: 'Error al guardar el usaurio' }];  
-          console.log('Error al guardar: ' + error)
         }
       });
     } else if (this.op = this.OPS.EDIT){
@@ -164,18 +180,18 @@ export class UsuariosDetailComponent implements OnInit {
         },
         error: (error: HttpErrorResponse) => {
           this.messages = [{ severity: 'error', summary: 'Error', detail: 'Error al guardar el usaurio' }];  
-          console.log('Error al guardar: ' + error)
         }
       });
-    }
-   
-
-    console.log(this.usuarioForm);
-    
+    }  
   }
 
   volver(){
-    this.router.navigate(['/usuarios']);
+    let url = this.router.url;
+    if (url.includes('usuarios')){
+      this.router.navigate(['/usuarios']);
+    } else if (url.includes('registro')){
+      this.router.navigate(['/login']);
+    }   
   }
 
 }

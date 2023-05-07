@@ -1,0 +1,122 @@
+<div class="container">
+    <p-toolbar styleClass="mt-4 mb-4 gap-2">
+        <ng-template pTemplate="left">
+            <h2>Detalle de designación</h2>
+        </ng-template>
+    
+        <ng-template pTemplate="right">
+            <button pButton pRipple [label]="'Volver'" icon="pi pi-arrow-left" class="mr-2" (click)="volver()"></button>
+            <button *ngIf="this.op == this.OPS.NEW" pButton pRipple 
+                [label]="'Añadir designación'" icon="pi pi-save" class="p-button-success" (click)="guardar()"></button>
+            <button *ngIf="this.op == this.OPS.EDIT && !consulta" pButton pRipple 
+                [label]="'Editar designación'" icon="pi pi-save" class="p-button-success" (click)="guardar()"></button>
+        </ng-template>
+    </p-toolbar>
+    
+    <p-messages [(value)]="messages" ></p-messages>
+    
+    <form *ngIf="cargaInicial" [formGroup]="designacionForm" (ngOnSumit)="guardar()" class="formgrid grid">
+
+        <div class="field col-12 md:col-3 md:mb-5">
+            <span class="p-float-label mx-4">
+                <input pInputText id="temporada" formControlName="temporada" class="w-full" [disabled]="deshabilitarTemporada"/>
+                <label htmlFor="temporada">Temporada </label>
+            </span>
+        </div>
+
+        <div class="field col-12 md:col-3 md:mb-5">
+            <span class="p-float-label mx-4">
+                <p-dropdown [options]="categorias" formControlName="categoria" optionLabel="descripcion" inputId="float-label" (onChange)="changeCategoria()"></p-dropdown>
+                <label for="float-label">Categoría </label>
+              </span>
+        </div>
+
+        <div class="field col-12 md:col-2 md:mb-5">
+            <span class="p-float-label mx-4">
+                <p-dropdown [options]="competiciones" formControlName="competicion" optionLabel="descripcion" inputId="float-label" (onChange)="changeCompeticion()"></p-dropdown>
+                <label for="float-label">Competición </label>
+              </span>
+        </div>
+
+        <div class="field col-12 md:col-2 md:mb-5">
+            <span class="p-float-label mx-4">
+                <p-dropdown [options]="jornadas" formControlName="jornada" inputId="float-label" (onChange)="changeJornada()"></p-dropdown>
+                <label for="float-label">Jornada </label>
+              </span>
+        </div>
+
+        <div class="field col-12 md:col-2 md:mb-5">
+            <span class="p-float-label mx-4">
+                <p-dropdown [options]="partidos" formControlName="partido" optionLabel="equipoLocal.nombre" inputId="float-label"></p-dropdown>
+                <label for="float-label">Partido *</label>
+              </span>
+        </div>
+
+        <div class="field col-12 md:col-4 md:mb-5">
+            <span class="p-float-label mx-4">
+                <p-calendar formControlName="fecha" [showIcon]="true"  [touchUI]="false" class="w-full"></p-calendar>
+                <label htmlFor="fecha">Fecha *</label>
+            </span>
+        </div>
+        
+        <div class="field col-12 md:col-4 md:mb-5">
+            <span class="p-float-label mx-4">
+                <p-autoComplete formControlName="arbitro1" [suggestions]="filteredUsuarios" (completeMethod)="filterUsuarios($event)"  
+                [dropdown]="true"  field="nombre" [delay]="delay"></p-autoComplete>
+                <label for="float-label">Arbitro princial *</label>
+            </span>
+        </div>
+
+        <div class="field col-12 md:col-4 md:mb-5">
+            <span class="p-float-label mx-4">
+                <p-autoComplete formControlName="arbitro2" [suggestions]="filteredUsuarios" (completeMethod)="filterUsuarios($event)"  
+                [dropdown]="true"  field="nombre" [delay]="delay"></p-autoComplete>
+                <label for="float-label">Arbitro auxiliar 1 </label>
+            </span>
+        </div>
+
+        <div class="field col-12 md:col-4 md:mb-5">
+            <span class="p-float-label mx-4">
+                <p-autoComplete formControlName="arbitro3" [suggestions]="filteredUsuarios" (completeMethod)="filterUsuarios($event)"  
+                [dropdown]="true"  field="nombre" [delay]="delay"></p-autoComplete>
+                <label for="float-label">Arbitro auxiliar 2 </label>
+            </span>
+        </div>
+
+        <div class="field col-12 md:col-4 md:mb-5">
+            <span class="p-float-label mx-4">
+                <p-autoComplete formControlName="oficial1" [suggestions]="filteredUsuarios" (completeMethod)="filterUsuarios($event)"  
+                [dropdown]="true"  field="nombre" [delay]="delay"></p-autoComplete>
+                <label for="float-label">Oficial 1 *</label>
+            </span>
+        </div>
+
+        <div class="field col-12 md:col-4 md:mb-5">
+            <span class="p-float-label mx-4">
+                <p-autoComplete formControlName="oficial2" [suggestions]="filteredUsuarios" (completeMethod)="filterUsuarios($event)"  
+                [dropdown]="true"  field="nombre" [delay]="delay"></p-autoComplete>
+                <label for="float-label">Oficial 2 </label>
+            </span>
+        </div>
+
+        <div class="field col-12 md:col-4 md:mb-5">
+            <span class="p-float-label mx-4">
+                <p-autoComplete formControlName="oficial3" [suggestions]="filteredUsuarios" (completeMethod)="filterUsuarios($event)"  
+                [dropdown]="true"  field="nombre" [delay]="delay"></p-autoComplete>
+                <label for="float-label">Oficial 3 </label>
+            </span>
+        </div>
+
+        <div class="field col-12 md:col-4 md:mb-5">
+            <span class="p-float-label mx-4">
+                <p-autoComplete formControlName="arbitro4" [suggestions]="filteredUsuarios" (completeMethod)="filterUsuarios($event)"  
+                [dropdown]="true"  field="nombre" [delay]="delay"></p-autoComplete>
+                <label for="float-label">Oficial 4 </label>
+            </span>
+        </div>
+
+    </form>
+
+</div>
+
+

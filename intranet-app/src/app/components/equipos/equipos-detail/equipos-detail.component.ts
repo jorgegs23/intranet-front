@@ -25,12 +25,15 @@ export class EquiposDetailComponent {
   idEquipo: any;
   equipoForm: FormGroup ;
 
-  temporadas: Temporada[] = [];
+  temporadaActiva: Temporada | undefined;
   categorias: Categoria[] = [];
   equipo: Equipo | undefined;
   
   cargaInicial = false;
   activo: string = '';
+
+  deshabilitarTemporada = true;
+  consulta: boolean = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -44,9 +47,9 @@ export class EquiposDetailComponent {
     this.fillForm();
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.getCategorias();
-    this.getTemporadas();
+    await this.getTemporadaActiva();
     this.activatedRoute.params.subscribe(params => {
       if (params && params['idEquipo']) {
         this.op = this.OPS.EDIT;
@@ -64,10 +67,12 @@ export class EquiposDetailComponent {
     this.equiposService.getEquipoById(this.idEquipo).subscribe({
       next: (response) =>{
         if (response.success){
-          this.equipo =  response.message;
+          this.equipo =  response.message;  
+          if (this.equipo.temporada?.id != this.temporadaActiva?.id){
+            this.consulta = true;
+          }
           this.fillForm();
           this.cargaInicial = true;
-          this.router.navigate(['/equipos-detail', this.equipo.id]);
         } else {
           this.messages = [{ severity: 'error', summary: 'Error', detail: response.error }]; 
         }
@@ -75,7 +80,6 @@ export class EquiposDetailComponent {
       },
       error: (error: HttpErrorResponse) => {
         this.messages = [{ severity: 'error', summary: 'Error', detail: 'Error al obtener el equipo' }];  
-        console.log('Error al obtener el usaurio: ' + error)
         }
     })
   }
@@ -84,7 +88,6 @@ export class EquiposDetailComponent {
     this.masterDataService.getAllCategorias().subscribe({
       next: (response: Categoria[]) => {
         this.categorias = response;
-        console.log(response)
         this.categorias.unshift({
           categoria: undefined,
           descripcion: 'Seleccione un valor'
@@ -96,34 +99,31 @@ export class EquiposDetailComponent {
     });
   }
 
-  getTemporadas(){
-    this.temporadasServive.getAllTemporadas().subscribe({
-      next: (response: ObjectResponse<Temporada[]>) => {
+  async getTemporadaActiva(){
+    await this.temporadasServive.getTemporadaActiva().subscribe({
+      next: (response: ObjectResponse<Temporada>) => {
         if (response.success){
-          this.temporadas = response.message;
-          this.temporadas.unshift({
-            id: undefined,
-            descripcion: 'Seleccione un valor'
-          })
+          this.temporadaActiva = response.message;
+          this.equipoForm.get('temporada')?.setValue(this.temporadaActiva.descripcion)
         } else {
           this.messages = [{ severity: 'error', summary: 'Error', detail: response.error }]; 
         } 
       },
       error: (error: HttpErrorResponse) => {
-        this.messages = [{ severity: 'error', summary: 'Error', detail: 'Error al obtener el listado de temporadas' }];  
+        this.messages = [{ severity: 'error', summary: 'Error', detail: 'Error al obtener la temporada activa' }];  
       }
     });
   }
   
   fillForm() {
     this.equipoForm=this.formBuilder.group({
-      id: [this.equipo?.id ? this.equipo.id :null],
-      nombre: [this.equipo?.nombre ? this.equipo.nombre : '', [Validators.required]],
-      categoria: [this.equipo?.categoria ? this.equipo?.categoria : null,],
-      municipio: [this.equipo?.municipio ? this.equipo.municipio : null, [Validators.required]],
-      direccion: [this.equipo?.direccion ? this.equipo.direccion : null, [Validators.required]],
-      pabellon: [this.equipo?.pabellon ? this.equipo.pabellon : null, [Validators.required]],
-      temporada: [this.equipo?.temporada ? this.equipo.temporada : null,],
+      id: [this.equipo?.id ? this.equipo.id :null,],
+      nombre: [{value: this.equipo?.nombre ? this.equipo.nombre : '', disabled: this.consulta}, [Validators.required]],
+      categoria: [{value: this.equipo?.categoria ? this.equipo?.categoria : null, disabled: this.consulta},],
+      municipio: [{value: this.equipo?.municipio ? this.equipo.municipio : null, disabled: this.consulta}, [Validators.required]],
+      direccion: [{value: this.equipo?.direccion ? this.equipo.direccion : null, disabled: this.consulta}, [Validators.required]],
+      pabellon: [{value: this.equipo?.pabellon ? this.equipo.pabellon : null, disabled: this.consulta}, [Validators.required]],
+      temporada: [{value: this.equipo?.temporada ? this.equipo.temporada.descripcion : null, disabled: true},[Validators.required]]
     })
   }
 
@@ -138,13 +138,14 @@ export class EquiposDetailComponent {
       return;
     }
 
-    if (this.equipoForm.get('temporada')?.value.id == undefined)  {
+    let temporada = this.op == this.OPS.NEW ? this.temporadaActiva : this.equipo?.temporada
+    if (temporada == undefined)  {
       this.messages = [{ severity: 'error', summary: 'Error', detail: 'La temporada es obligatoria' }];  
       return;
     }
-
     this.equipo = this.equipoForm.getRawValue() as Equipo;
-     
+    this.equipo.temporada = temporada; 
+
     if(this.op == this.OPS.NEW){
       this.equiposService.addEquipo(this.equipo).subscribe({
         next: (response) => {
@@ -157,8 +158,7 @@ export class EquiposDetailComponent {
           //this.router.navigate['/equipos-detail/${this.equipo.id}'];
         },
         error: (error: HttpErrorResponse) => {
-          this.messages = [{ severity: 'error', summary: 'Error', detail: 'Error al guardar el usaurio' }];  
-          console.log('Error al guardar: ' + error)
+          this.messages = [{ severity: 'error', summary: 'Error', detail: 'Error al guardar el equipo' }];  
         }
       });
     } else if (this.op = this.OPS.EDIT){
@@ -173,12 +173,10 @@ export class EquiposDetailComponent {
           //this.router.navigate['/equipos-detail/${this.equipo.id}'];
         },
         error: (error: HttpErrorResponse) => {
-          this.messages = [{ severity: 'error', summary: 'Error', detail: 'Error al guardar el usaurio' }];  
-          console.log('Error al guardar: ' + error)
+          this.messages = [{ severity: 'error', summary: 'Error', detail: 'Error al guardar el equipo' }];  
         }
       });
     }
-    console.log(this.equipoForm);
   }
 
   volver(){

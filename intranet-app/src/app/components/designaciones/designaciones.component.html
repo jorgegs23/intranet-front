@@ -1,0 +1,132 @@
+<div class="container">
+
+    <p-accordion styleClass="mb-4 w-full">
+        <p-accordionTab>
+            <ng-template pTemplate="header">
+                <div class="flex align-items-center">
+                    <i class="pi pi-search mr-2"></i>
+                    <span class="vertical-align-middle">Filtros</span>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="content">
+
+                    <div class="grid gap-4">
+                        <div class="md:col-3 lg:col-2">
+                            <span class="p-float-label">
+                                <p-dropdown [options]="temporadas" [(ngModel)]="temporada" optionLabel="descripcion" inputId="float-label"></p-dropdown>
+                                <label for="float-label">Temporada</label>
+                              </span>
+                        </div>
+                        <div class="md:col-3 lg:col-3">
+                            <span class="p-float-label">
+                                <p-calendar [(ngModel)]="mes" view="month" dateFormat="mm/yy" [readonlyInput]="true"></p-calendar>
+                                <label htmlFor="fecha">Mes </label>
+                              </span>
+                        </div>
+                        <div class="md:col-3 lg:col-3">
+                            <span class="p-float-label">
+                                <p-calendar [(ngModel)]="fecha" [showIcon]="true"  class="w-full"></p-calendar>
+                                <label htmlFor="fecha">Fecha </label>
+                              </span>
+                        </div>           
+                        <div class="md:col-3 lg:col-3">
+                            <span class="p-float-label">
+                                <p-autoComplete [(ngModel)]="usuario" [suggestions]="filteredUsuarios" (completeMethod)="filterUsuarios($event)"  
+                                [dropdown]="true"  field="nombre" [delay]="delay"></p-autoComplete>
+                                <label for="float-label">Usuario designado </label>
+                            </span>
+                        </div>
+
+                    </div>
+                    <div class="flex align-items-center justify-content-center mt-2">
+                        <button pButton pRipple label="Limpiar filtros" icon="pi pi-delete-left" class="p-button-secondary mt-2 mr-4" (click)="limpiarFiltros()"></button>
+                        <button pButton pRipple label="Aplicar filtros" icon="pi pi-search" class="p-button mt-2" (click)="filtrar(true)"></button>              
+                    </div>
+
+                
+               
+            </ng-template>
+        </p-accordionTab>
+    </p-accordion>
+
+    <p-messages [(value)]="messages" ></p-messages>
+    
+    <p-confirmDialog #cd [style]="{width: '50vw'}">
+        <ng-template pTemplate="footer">
+            <button type="button" pButton icon="pi pi-times" label="Cancelar" (click)="cd.reject()"></button>
+            <button type="button" pButton icon="pi pi-check" class="p-button-danger" label="Confirmar eliminación" (click)="cd.accept()"></button>
+        </ng-template>
+    </p-confirmDialog>
+
+    <div>
+        <p-table
+            #dt
+            [value]="designaciones"
+            [lazy]="false"
+            [rows]="itemsPorPagina"
+            [paginator]="false"
+            [globalFilterFields]="['designacion.partido.temporada.descripcion', 'designacion.partido.competicion.descripcion', 'designacion.partido.jornada', 
+                'designacion.partido.categoria.descripcion',  'designacion.partido.equipoLocal.nombre','designacion.partido.equipoVisitante.nombre','fecha']"
+            [tableStyle]="{ 'min-width': '75rem' }"
+            [(selection)]="selectedItems"
+            [rowHover]="true"
+            dataKey="id"
+            currentPageReportTemplate="Desginaciones {first} - {last} de {totalRecords}"
+            [showCurrentPageReport]="true"
+        >
+            <ng-template pTemplate="caption">
+                <div class="flex align-items-center justify-content-between">
+                    <h3 class="m-0">Listado de partidos</h3>
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-search"></i>
+                        <input pInputText type="text" (input)="applyFilterGlobal($event, 'contains')" placeholder="Search..." />
+                    </span>
+                    <div class="flex align-items-center justify-content-between gap-2">
+                        <button pButton pRipple label="Nueva Designación" icon="pi pi-plus" class="p-button-success mr-2" (click)="add()"></button>
+                        <button pButton pRipple [label]="'Eliminar'" icon="pi pi-trash" class="p-button-danger" (click)="deleteSelected()" [disabled]="!selectedItems || !selectedItems.length"></button>
+                    </div>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width: 4rem">
+                        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                    </th>
+                    <th pSortableColumn="designacion.partido.temporada.descripcion">Temporada <p-sortIcon field="designacion.partido.temporada.descripcion"></p-sortIcon></th>
+                    <th pSortableColumn="designacion.partido.competicion.descripcion">Competición <p-sortIcon field="designacion.partido.competicion.descripcion"></p-sortIcon></th>
+                    <th pSortableColumn="designacion.partido.jornada">Jornada <p-sortIcon field="designacion.partido.jornada"></p-sortIcon></th>
+                    <th pSortableColumn="designacion.partido.categoria.descripcion">Categoría <p-sortIcon field="designacion.partido.categoria.descripcion"></p-sortIcon></th>
+                    <th pSortableColumn="designacion.partido.equipoLocal.nombre">Local <p-sortIcon field="designacion.partido.equipoLocal.nombre"></p-sortIcon></th>
+                    <th pSortableColumn="designacion.partido.equipoVisitante.nombre">Visitante <p-sortIcon field="designacion.partido.equipoVisitante.nombre"></p-sortIcon></th>
+                    <th pSortableColumn="fecha">Fecha designación<p-sortIcon field="fecha"></p-sortIcon></th>
+                    <th></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-designacion>
+                <tr>
+                    <td>
+                        <p-tableCheckbox [value]="designacion"></p-tableCheckbox>
+                    </td>
+                    <td>{{ designacion.partido.temporada.descripcion }}</td>
+                    <td>{{ designacion.partido.competicion.descripcion }}</td>
+                    <td>{{ designacion.partido.jornada }}</td>
+                    <td>{{ designacion.partido.categoria.descripcion }}</td>
+                    <td>{{ designacion.partido.equipoLocal.nombre }}</td>
+                    <td>{{ designacion.partido.equipoVisitante.nombre }}</td>
+                    <td>{{ designacion.fecha | date: 'dd/MM/yyyy'}}</td>
+                    <td>
+                        <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-warning mr-2" (click)="edit(designacion)"></button>
+                        <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="delete(designacion)"></button>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="summary">
+                <div class="card flex justify-content-between">
+                    <div class="flex align-items-center justify-content-between">{{ totalItems != 0 ? first + 1 : '0'}} - {{ (first + 1 + itemsPorPagina) >  totalItems ? totalItems : (first + 1 + itemsPorPagina)}} de {{totalItems}} designaciones.</div>
+                    <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="itemsPorPagina" [totalRecords]="totalItems" [rowsPerPageOptions]="PAGINACION_ITEMS_TABLA"></p-paginator>
+                </div>  
+            </ng-template>
+        </p-table>
+    </div>
+
+</div>

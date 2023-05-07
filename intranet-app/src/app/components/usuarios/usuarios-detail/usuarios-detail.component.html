@@ -5,11 +5,11 @@
         </ng-template>
     
         <ng-template pTemplate="right">
-            <button pButton pRipple [label]="'Volver'" icon="pi pi-arrow-left" class="mr-2" (click)="volver()"></button>
+            <button *ngIf="mostrarVolver" pButton pRipple [label]="'Volver'" icon="pi pi-arrow-left" class="mr-2" (click)="volver()"></button>
             <button *ngIf="this.op == this.OPS.NEW" pButton pRipple 
-                [label]="'Añadir usuario'" icon="pi pi-save" class="p-button-success" (click)="guardar()"></button>
+                [label]="opcionesAdmin ? 'Añadir usuario' : 'Registrarse'" icon="pi pi-save" class="p-button-success" (click)="guardar()"></button>
             <button *ngIf="this.op == this.OPS.EDIT" pButton pRipple 
-                [label]="'Editar usuario'" icon="pi pi-save" class="p-button-success" (click)="guardar()"></button>
+                [label]="opcionesAdmin ? 'Editar usuario' : 'Actualizar datos'" icon="pi pi-save" class="p-button-success" (click)="guardar()"></button>
         </ng-template>
     </p-toolbar>
     
@@ -32,13 +32,13 @@
         </div>
 
         <div class="field col-12 md:col-2 md:mb-5">
-            <span class="p-float-label mx-4">
+            <span *ngIf="opcionesAdmin" class="p-float-label mx-4">
                 <p-dropdown [options]="opcionesSiONo" formControlName="validado" optionLabel="text" inputId="float-label"></p-dropdown>
                 <label for="float-label">Validado</label>
               </span>
         </div>
         <div class="field col-12 md:col-1 md:mb-5">
-            <span class="p-float-label mx-4">
+            <span *ngIf="opcionesAdmin" class="p-float-label mx-4">
                 <p-dropdown [options]="opcionesSiONo" formControlName="activo"  optionLabel="text" inputId="float-label"></p-dropdown>
                 <label for="float-label">Activo</label>
               </span>

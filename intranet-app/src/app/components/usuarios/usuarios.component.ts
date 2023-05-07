@@ -65,7 +65,6 @@ export class UsuariosComponent implements OnInit{
     this.masterDataService.getAllPerfiles().subscribe({
       next: (response: Perfil[]) => {
         this.perfiles = response;
-        console.log(response)
         this.perfiles.unshift({
           perfil: undefined,
           descripcion: 'Todos'
@@ -83,7 +82,6 @@ export class UsuariosComponent implements OnInit{
       next: (response: ObjectResponse<Usuario[]>) => {
         if (response.success){
           this.usuarios = response.message;
-          console.log(response)
         } else {
           this.messages = [{ severity: 'error', summary: 'Error', detail: response.error }];  
         }   
@@ -117,7 +115,6 @@ export class UsuariosComponent implements OnInit{
             this.totalItems = response.message.paginacion.total;
             //this.pagina = response.message.paginacion.paginas;
           }
-          console.log(response)
         } else {
           this.messages = [{ severity: 'error', summary: 'Error', detail: response.error }];  
         }
@@ -127,7 +124,6 @@ export class UsuariosComponent implements OnInit{
         this.messages = [{ severity: 'error', summary: 'Error', detail: 'Error al obtener el listado de usuarios' }];  
       }
     });
-    console.log(filtro);
   }
 
   limpiarFiltros(){
@@ -197,7 +193,6 @@ export class UsuariosComponent implements OnInit{
         },
         error: (error: HttpErrorResponse) => {
           this.messages = [{ severity: 'error', summary: 'Error', detail: 'Error al eliminar el usuario' }];  
-          console.log('Error al eliminar el usuario: ' + error)
         }
       });
  
@@ -205,7 +200,6 @@ export class UsuariosComponent implements OnInit{
   }
 
   onPageChange(event: any){
-    console.log(event);
     this.selectedItems = [];
     this.itemsPorPagina = event.rows;
     this.first = event.first;

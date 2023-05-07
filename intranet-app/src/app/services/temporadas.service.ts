@@ -18,6 +18,10 @@ export class TemporadasService {
     return this.http.get<ObjectResponse<Temporada[]>>(`${this.apiServerUrl}/temporadas/all`);
   }
 
+  public getTemporadaActiva(): Observable<ObjectResponse<Temporada>>{
+    return this.http.get<ObjectResponse<Temporada>>(`${this.apiServerUrl}/temporadas/activa`);
+  }
+
   public createTemporada(): Observable<ObjectResponse<string>>{
     return this.http.get<ObjectResponse<string>>(`${this.apiServerUrl}/temporadas/create`);
   }

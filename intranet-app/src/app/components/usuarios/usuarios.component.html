@@ -127,7 +127,7 @@
             </ng-template>
             <ng-template pTemplate="summary">
                 <div class="card flex justify-content-between">
-                    <div class="flex align-items-center justify-content-between">{{ first + 1 }} - {{ (first + 1 + itemsPorPagina) >  totalItems ? totalItems : (first + 1 + itemsPorPagina)}} de {{totalItems}} usuarios.</div>
+                    <div class="flex align-items-center justify-content-between">{{ totalItems != 0 ? first + 1 : '0'}} {{ (first + 1 + itemsPorPagina) >  totalItems ? totalItems : (first + 1 + itemsPorPagina)}} de {{totalItems}} usuarios.</div>
                     <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="itemsPorPagina" [totalRecords]="totalItems" [rowsPerPageOptions]="PAGINACION_ITEMS_TABLA"></p-paginator>
                 </div>  
             </ng-template>
