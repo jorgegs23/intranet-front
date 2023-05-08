@@ -9,12 +9,13 @@ import { Designacion } from 'src/app/models/designacion.model';
 import { Partido } from 'src/app/models/partido.model';
 import { Temporada } from 'src/app/models/temporada.model';
 import { Usuario } from 'src/app/models/usuario.model';
+import { AuthService } from 'src/app/services/auth.service';
 import { DesignacionesService } from 'src/app/services/designaciones.service';
 import { MasterDataService } from 'src/app/services/master-data.service';
 import { TemporadasService } from 'src/app/services/temporadas.service';
 import { UsuariosService } from 'src/app/services/usuarios.service';
 import { ObjectResponse } from 'src/app/utils/backend-service';
-import { OPERACION } from 'src/app/utils/constants';
+import { OPERACION, PERFIL } from 'src/app/utils/constants';
 
 @Component({
   selector: 'app-designaciones-detail',
@@ -33,13 +34,16 @@ export class DesignacionesDetailComponent {
   categorias: Categoria[] = [];
   competiciones: Competicion[] = [];
   jornadas: any[] = [];
-  partidos: Partido[] = [];
+  partidos: any[] = [];
   partido: Partido | undefined;
   filteredUsuarios: any[] = [];
   listadoUsuarios: Usuario[] = [];
   designacion: Designacion | undefined;
   
   cargaInicial = false;
+
+  arbitros: number = 0;
+  oficiales: number = 0;
 
   deshabilitarTemporada = true;
   consulta: boolean = false;
@@ -71,6 +75,9 @@ export class DesignacionesDetailComponent {
       } else {
         this.op = this.OPS.NEW;
         this.cargaInicial = true;
+        this.designacionForm.get('competicion')?.disable();
+        this.designacionForm.get('jornada')?.disable();
+        this.designacionForm.get('partido')?.disable();
       }
     });
   }
@@ -112,7 +119,7 @@ export class DesignacionesDetailComponent {
   }
 
   getUsuarios(){
-    this.usuariosService.getAllUsuarios().subscribe({
+    this.usuariosService.getAllUsuariosDesignables(true).subscribe({
       next: (response: ObjectResponse<Usuario[]>) => {
         if (response.success){
           this.listadoUsuarios = response.message;
@@ -160,7 +167,11 @@ export class DesignacionesDetailComponent {
       oficial2: [{value: this.designacion?.oficial2 ? this.designacion.oficial2 : null, disabled: this.consulta},],
       oficial3: [{value: this.designacion?.oficial3 ? this.designacion.oficial3 : null, disabled: this.consulta},],
       oficial4: [{value: this.designacion?.oficial4 ? this.designacion.oficial4 : null, disabled: this.consulta},],
-    })
+    });
+
+    if (this.designacion){
+      this.changeCategoria(true);
+    }
   }
 
   guardar(){
@@ -254,7 +265,7 @@ export class DesignacionesDetailComponent {
     this.router.navigate(['/designaciones']);
   }
 
-  filterUsuarios(event: any){
+  filterUsuarios(event: any, perfil: string){
     this.filteredUsuarios = [];
     let filtered: any[] = [];
     let query = event.query;
@@ -264,22 +275,97 @@ export class DesignacionesDetailComponent {
       let nombreCompleto =  item.nombre 
         + (item.apellido1 ? ' ' + item.apellido1 : '' ) 
         + (item.apellido2 ? ' ' + item.apellido2 : '' ) ;
-      if (nombreCompleto && nombreCompleto.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+      if (nombreCompleto && nombreCompleto.toLowerCase().indexOf(query.toLowerCase()) == 0 && item.perfil?.perfil == perfil) {
         filtered.push(item);
       }
     });
     this.filteredUsuarios = filtered;
   }
 
-  changeCategoria(){
-
+  changeCategoria(edicion: boolean){
+    this.arbitros = 0;
+    this.oficiales = 0;
+    let categoria  = this.designacionForm.get('categoria')?.value;
+    if (categoria !=  undefined){
+      this.masterDataService.getCompeticionesByCategoria(categoria.categoria).subscribe({
+        next: (response: Competicion[]) => {  
+          if (response.length > 0 ){ 
+            this.competiciones = response;
+            this.arbitros = categoria.arbitros;
+            this.oficiales = categoria.oficiales;
+            this.designacionForm.get('competicion')?.enable();
+            this.competiciones.unshift({
+              competicion: undefined,
+              descripcion: 'Seleccione un valor'
+            });
+            if (edicion) this.changeCompeticion()
+          } else {
+            this.messages = [{ severity: 'error', summary: 'Error', detail: 'No se han encontrado competiciones para los parametros seleccionados' }];
+            this.arbitros = 0;
+            this.oficiales = 0;
+            this.competiciones = [];
+            this.jornadas = [];
+            this.partidos = [];
+            this.designacionForm.get('competicion')?.disable();
+            this.designacionForm.get('jornada')?.disable();
+            this.designacionForm.get('partido')?.disable();
+          }
+        },
+        error: (error: HttpErrorResponse) => {
+          this.messages = [{ severity: 'error', summary: 'Error', detail: 'Error al obtener el listado de competiciones' }];
+        }
+      });
+    }
+    
   }
 
   changeCompeticion(){
-    
+    let categoria  = this.designacionForm.get('categoria')?.value.categoria;
+    let competicion  = this.designacionForm.get('competicion')?.value.competicion;
+    if (categoria !=  undefined && competicion != undefined){
+      this.masterDataService.getJornadasByCategoriaAndCompeticion(categoria, competicion).subscribe({
+        next: (response: Number[]) => {
+          if (response.length > 0 ){
+            this.jornadas = response;
+            this.designacionForm.get('jornada')?.enable();
+            this.designacionForm.get('jornada')?.setValue(this.jornadas[0])
+            this.changeJornada();
+          }else {
+            this.messages = [{ severity: 'error', summary: 'Error', detail: 'No se han encontrado jornadas para los parametros seleccionados' }];
+            this.jornadas = [];
+            this.partidos = [];
+            this.designacionForm.get('jornada')?.disable();
+            this.designacionForm.get('partido')?.disable();
+          }
+        },
+        error: (error: HttpErrorResponse) => {
+          this.messages = [{ severity: 'error', summary: 'Error', detail: 'Error al obtener el listado de jornadas' }];
+        }
+      });
+    }
   }
 
   changeJornada(){
-    
+    let categoria  = this.designacionForm.get('categoria')?.value.categoria;
+    let competicion  = this.designacionForm.get('competicion')?.value.competicion;
+    let jornada  = this.designacionForm.get('jornada')?.value;
+    if (categoria !=  undefined && competicion != undefined && jornada != undefined){
+      this.masterDataService.getPartidosByCategoriaAndCompeticionAndJornada(categoria, competicion, jornada).subscribe({
+        next: (response: Partido[]) => {
+          if(response.length > 0){
+            this.partidos = response;
+            this.designacionForm.get('partido')?.enable();
+          } else {
+            this.messages = [{ severity: 'error', summary: 'Error', detail: 'No se han encontrado partidos para los parametros seleccionados' }];
+            this.partidos = [];
+            this.designacionForm.get('partido')?.disable();
+          }
+          
+        },
+        error: (error: HttpErrorResponse) => {
+          this.messages = [{ severity: 'error', summary: 'Error', detail: 'Error al obtener el listado de partidos' }];
+        }
+      });
+    }
   }
 }

@@ -26,91 +26,150 @@
 
         <div class="field col-12 md:col-3 md:mb-5">
             <span class="p-float-label mx-4">
-                <p-dropdown [options]="categorias" formControlName="categoria" optionLabel="descripcion" inputId="float-label" (onChange)="changeCategoria()"></p-dropdown>
+                <p-dropdown [options]="categorias" formControlName="categoria" optionLabel="descripcion" inputId="float-label" 
+                (onChange)="changeCategoria(false)" [style]="{'width':'100%'}"></p-dropdown>
                 <label for="float-label">Categoría </label>
               </span>
         </div>
 
-        <div class="field col-12 md:col-2 md:mb-5">
+        <div class="field col-12 md:col-3 md:mb-5">
             <span class="p-float-label mx-4">
-                <p-dropdown [options]="competiciones" formControlName="competicion" optionLabel="descripcion" inputId="float-label" (onChange)="changeCompeticion()"></p-dropdown>
+                <p-dropdown [options]="competiciones" formControlName="competicion" optionLabel="descripcion" inputId="float-label"
+                (onChange)="changeCompeticion()" [style]="{'width':'100%'}"></p-dropdown>
                 <label for="float-label">Competición </label>
               </span>
         </div>
 
-        <div class="field col-12 md:col-2 md:mb-5">
+        <div class="field col-12 md:col-3 md:mb-5">
             <span class="p-float-label mx-4">
-                <p-dropdown [options]="jornadas" formControlName="jornada" inputId="float-label" (onChange)="changeJornada()"></p-dropdown>
+                <p-dropdown [options]="jornadas" formControlName="jornada" inputId="float-label" 
+                (onChange)="changeJornada()" [style]="{'width':'50%'}"></p-dropdown>
                 <label for="float-label">Jornada </label>
               </span>
         </div>
 
-        <div class="field col-12 md:col-2 md:mb-5">
+        <div class="field col-12 md:col-6 md:mb-5">
             <span class="p-float-label mx-4">
-                <p-dropdown [options]="partidos" formControlName="partido" optionLabel="equipoLocal.nombre" inputId="float-label"></p-dropdown>
+                <p-dropdown [options]="partidos" formControlName="partido" inputId="float-label" optionLabel="equipoLocal.nombre" [style]="{'width':'100%'}">
+                    <ng-template let-partido pTemplate="item">
+                        {{partido.equipoLocal.nombre}} - {{partido.equipoVisitante.nombre}}
+                    </ng-template>
+                    <ng-template let-partido pTemplate="selectedItem">
+                        {{partido.equipoLocal.nombre}} - {{partido.equipoVisitante.nombre}}
+                    </ng-template>
+                </p-dropdown>
                 <label for="float-label">Partido *</label>
               </span>
         </div>
 
         <div class="field col-12 md:col-4 md:mb-5">
             <span class="p-float-label mx-4">
-                <p-calendar formControlName="fecha" [showIcon]="true"  [touchUI]="false" class="w-full"></p-calendar>
+                <p-calendar formControlName="fecha" [showIcon]="true"  [touchUI]="false" dateFormat="dd/mm/yy"  [showButtonBar]="true" class="w-full"></p-calendar>
                 <label htmlFor="fecha">Fecha *</label>
             </span>
         </div>
         
         <div class="field col-12 md:col-4 md:mb-5">
-            <span class="p-float-label mx-4">
-                <p-autoComplete formControlName="arbitro1" [suggestions]="filteredUsuarios" (completeMethod)="filterUsuarios($event)"  
-                [dropdown]="true"  field="nombre" [delay]="delay"></p-autoComplete>
+            <span class="p-float-label mx-4"  *ngIf="arbitros >= 1">
+                <p-autoComplete formControlName="arbitro1" [suggestions]="filteredUsuarios" (completeMethod)="filterUsuarios($event, 'ARB')"  
+                [dropdown]="true"  field="nombre" [delay]="delay" [style]="{'width':'100%'}">
+                    <ng-template let-usuario pTemplate="item">
+                        {{ usuario.nombre }} {{ usuario.apellido1 }} {{ usuario.apellido2 }}
+                    </ng-template>
+                    <ng-template let-usuario pTemplate="selectedItem">
+                        {{ usuario.nombre }} {{ usuario.apellido1 }} {{ usuario.apellido2 }}
+                    </ng-template>
+                </p-autoComplete>
                 <label for="float-label">Arbitro princial *</label>
             </span>
         </div>
 
         <div class="field col-12 md:col-4 md:mb-5">
-            <span class="p-float-label mx-4">
-                <p-autoComplete formControlName="arbitro2" [suggestions]="filteredUsuarios" (completeMethod)="filterUsuarios($event)"  
-                [dropdown]="true"  field="nombre" [delay]="delay"></p-autoComplete>
+            <span class="p-float-label mx-4"  *ngIf="arbitros >= 2">
+                <p-autoComplete formControlName="arbitro2" [suggestions]="filteredUsuarios" (completeMethod)="filterUsuarios($event, 'ARB')"  
+                [dropdown]="true"  field="nombre" [delay]="delay" [style]="{'width':'100%'}">
+                    <ng-template let-usuario pTemplate="item">
+                        {{ usuario.nombre }} {{ usuario.apellido1 }} {{ usuario.apellido2 }}
+                    </ng-template>
+                    <ng-template let-usuario pTemplate="selectedItem">
+                        {{ usuario.nombre }} {{ usuario.apellido1 }} {{ usuario.apellido2 }}
+                    </ng-template>
+                </p-autoComplete>
                 <label for="float-label">Arbitro auxiliar 1 </label>
             </span>
         </div>
 
         <div class="field col-12 md:col-4 md:mb-5">
-            <span class="p-float-label mx-4">
-                <p-autoComplete formControlName="arbitro3" [suggestions]="filteredUsuarios" (completeMethod)="filterUsuarios($event)"  
-                [dropdown]="true"  field="nombre" [delay]="delay"></p-autoComplete>
+            <span class="p-float-label mx-4" *ngIf="arbitros >= 3">
+                <p-autoComplete formControlName="arbitro3" [suggestions]="filteredUsuarios" (completeMethod)="filterUsuarios($event, 'ARB')"  
+                [dropdown]="true"  field="nombre" [delay]="delay" [style]="{'width':'100%'}">
+                    <ng-template let-usuario pTemplate="item">
+                        {{ usuario.nombre }} {{ usuario.apellido1 }} {{ usuario.apellido2 }}
+                    </ng-template>
+                    <ng-template let-usuario pTemplate="selectedItem">
+                        {{ usuario.nombre }} {{ usuario.apellido1 }} {{ usuario.apellido2 }}
+                    </ng-template>
+                </p-autoComplete>
                 <label for="float-label">Arbitro auxiliar 2 </label>
             </span>
         </div>
 
         <div class="field col-12 md:col-4 md:mb-5">
-            <span class="p-float-label mx-4">
-                <p-autoComplete formControlName="oficial1" [suggestions]="filteredUsuarios" (completeMethod)="filterUsuarios($event)"  
-                [dropdown]="true"  field="nombre" [delay]="delay"></p-autoComplete>
+            <span class="p-float-label mx-4" *ngIf="oficiales >= 1">
+                <p-autoComplete formControlName="oficial1" [suggestions]="filteredUsuarios" (completeMethod)="filterUsuarios($event,'OFI')"  
+                [dropdown]="true"  field="nombre" [delay]="delay" [style]="{'width':'100%'}">
+                    <ng-template let-usuario pTemplate="item">
+                        {{ usuario.nombre }} {{ usuario.apellido1 }} {{ usuario.apellido2 }}
+                    </ng-template>
+                    <ng-template let-usuario pTemplate="selectedItem">
+                        {{ usuario.nombre }} {{ usuario.apellido1 }} {{ usuario.apellido2 }}
+                    </ng-template>
+                </p-autoComplete>
                 <label for="float-label">Oficial 1 *</label>
             </span>
         </div>
 
         <div class="field col-12 md:col-4 md:mb-5">
-            <span class="p-float-label mx-4">
-                <p-autoComplete formControlName="oficial2" [suggestions]="filteredUsuarios" (completeMethod)="filterUsuarios($event)"  
-                [dropdown]="true"  field="nombre" [delay]="delay"></p-autoComplete>
+            <span class="p-float-label mx-4" *ngIf="oficiales >= 2">
+                <p-autoComplete formControlName="oficial2" [suggestions]="filteredUsuarios" (completeMethod)="filterUsuarios($event,'OFI')"  
+                [dropdown]="true"  field="nombre" [delay]="delay" [style]="{'width':'100%'}">
+                    <ng-template let-usuario pTemplate="item">
+                        {{ usuario.nombre }} {{ usuario.apellido1 }} {{ usuario.apellido2 }}
+                    </ng-template>
+                    <ng-template let-usuario pTemplate="selectedItem">
+                        {{ usuario.nombre }} {{ usuario.apellido1 }} {{ usuario.apellido2 }}
+                    </ng-template>
+                </p-autoComplete>
                 <label for="float-label">Oficial 2 </label>
             </span>
         </div>
 
         <div class="field col-12 md:col-4 md:mb-5">
-            <span class="p-float-label mx-4">
-                <p-autoComplete formControlName="oficial3" [suggestions]="filteredUsuarios" (completeMethod)="filterUsuarios($event)"  
-                [dropdown]="true"  field="nombre" [delay]="delay"></p-autoComplete>
+            <span class="p-float-label mx-4" *ngIf="oficiales >= 3">
+                <p-autoComplete formControlName="oficial3" [suggestions]="filteredUsuarios" (completeMethod)="filterUsuarios($event,'OFI')"  
+                [dropdown]="true"  field="nombre" [delay]="delay" [style]="{'width':'100%'}">
+                    <ng-template let-usuario pTemplate="item">
+                        {{ usuario.nombre }} {{ usuario.apellido1 }} {{ usuario.apellido2 }}
+                    </ng-template>
+                    <ng-template let-usuario pTemplate="selectedItem">
+                        {{ usuario.nombre }} {{ usuario.apellido1 }} {{ usuario.apellido2 }}
+                    </ng-template>
+                </p-autoComplete>
                 <label for="float-label">Oficial 3 </label>
             </span>
         </div>
 
         <div class="field col-12 md:col-4 md:mb-5">
-            <span class="p-float-label mx-4">
-                <p-autoComplete formControlName="arbitro4" [suggestions]="filteredUsuarios" (completeMethod)="filterUsuarios($event)"  
-                [dropdown]="true"  field="nombre" [delay]="delay"></p-autoComplete>
+            <span class="p-float-label mx-4" *ngIf="oficiales >= 4">
+                <p-autoComplete formControlName="oficial4" [suggestions]="filteredUsuarios" (completeMethod)="filterUsuarios($event,'OFI')"  
+                [dropdown]="true"  field="nombre" [delay]="delay" [style]="{'width':'100%'}">
+                    <ng-template let-usuario pTemplate="item">
+                        {{ usuario.nombre }} {{ usuario.apellido1 }} {{ usuario.apellido2 }}
+                    </ng-template>
+                    <ng-template let-usuario pTemplate="selectedItem">
+                        {{ usuario.nombre }} {{ usuario.apellido1 }} {{ usuario.apellido2 }}
+                    </ng-template>
+                </p-autoComplete>
                 <label for="float-label">Oficial 4 </label>
             </span>
         </div>

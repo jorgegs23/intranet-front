@@ -6,12 +6,14 @@ import { Table } from 'primeng/table';
 import { Designacion, FiltroDesignacion } from 'src/app/models/designacion.model';
 import { Temporada } from 'src/app/models/temporada.model';
 import { Usuario } from 'src/app/models/usuario.model';
+import { AuthService } from 'src/app/services/auth.service';
 import { DesignacionesService } from 'src/app/services/designaciones.service';
 import { EquiposService } from 'src/app/services/equipos.service';
 import { MasterDataService } from 'src/app/services/master-data.service';
 import { TemporadasService } from 'src/app/services/temporadas.service';
 import { UsuariosService } from 'src/app/services/usuarios.service';
 import { ObjectResponse, ArrayResponse } from 'src/app/utils/backend-service';
+import { PERFIL } from 'src/app/utils/constants';
 
 @Component({
   selector: 'app-designaciones',
@@ -48,19 +50,33 @@ export class DesignacionesComponent implements OnInit{
 
   delay: number = 300;
 
+  usuarioLogueado: Usuario | undefined;
+  usuarioAdmin: boolean = false;
+
   constructor(
     private designacionesService: DesignacionesService,
     private masterDataService: MasterDataService,
     private router: Router,
     private confirmationService: ConfirmationService,
     private temporadasServive: TemporadasService,
-    private usuariosService: UsuariosService
+    private usuariosService: UsuariosService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
+    this.checkPerfilUser();
     this.filtrar(true);
     this.getUsuarios();
     this.getTemporadas();
+  }
+
+  checkPerfilUser(){
+    this.usuarioLogueado = this.authService.getLoggedUser();
+    if (this.usuarioLogueado.perfil?.perfil?.toUpperCase() == PERFIL.ADMIN){
+      this.usuarioAdmin = true;
+    } else {
+      this.usuarioAdmin = false;
+    }
   }
 
   applyFilterGlobal($event: Event, stringVal: string) {
@@ -84,7 +100,8 @@ export class DesignacionesComponent implements OnInit{
   }
 
   getUsuarios(){
-    this.usuariosService.getAllUsuarios().subscribe({
+    let activos: boolean = false;
+    this.usuariosService.getAllUsuariosDesignables(activos).subscribe({
       next: (response: ObjectResponse<Usuario[]>) => {
         if (response.success){
           this.listadoUsuarios = response.message;
@@ -93,7 +110,7 @@ export class DesignacionesComponent implements OnInit{
         } 
       },
       error: (error: HttpErrorResponse) => {
-        this.messages = [{ severity: 'error', summary: 'Error', detail: 'Error al obtener el listado de temporadas' }];  
+        this.messages = [{ severity: 'error', summary: 'Error', detail: 'Error al obtener el listado de usuarios' }];  
       }
     });
   }
@@ -103,7 +120,12 @@ export class DesignacionesComponent implements OnInit{
     if (this.temporada?.id != null && this.temporada.id != undefined) filtro.temporada = this.temporada.id;
     if (this.mes != null && this.mes != undefined) filtro.mes = this.mes;
     if (this.fecha != null && this.fecha != undefined) filtro.fecha = this.fecha;
-    if (this.usuario?.id != null && this.usuario.id != undefined) filtro.usuario = this.usuario.id;
+    if (this.usuarioAdmin){
+       if (this.usuario?.id != null && this.usuario.id != undefined) filtro.usuario = this.usuario.id;
+    } else {
+      filtro.usuario = this.usuarioLogueado?.id;
+    }
+   
     
     if (reset) {
       this.first = 0;
@@ -188,7 +210,6 @@ export class DesignacionesComponent implements OnInit{
       this.designacionesService.deleteDesignaciones(this.idsDesignacionesEliminar).subscribe({
         next: (response) => {
           if (response.success){
-            this.idsDesignacionesEliminar = [];
             this.selectedItems = [];
             this.messages = [{ severity: 'success', summary: 'Ok', detail: response.message }]; 
             this.filtrar(false);         
@@ -198,6 +219,9 @@ export class DesignacionesComponent implements OnInit{
         },
         error: (error: HttpErrorResponse) => {
           this.messages = [{ severity: 'error', summary: 'Error', detail: 'Error al eliminar el designación' }];  
+        },
+        complete: ()=>{
+          this.idsDesignacionesEliminar = [];
         }
       });
  
@@ -227,6 +251,10 @@ export class DesignacionesComponent implements OnInit{
       }
     });
     this.filteredUsuarios = filtered;
+  }
+
+  descargar(){
+
   }
 }
 

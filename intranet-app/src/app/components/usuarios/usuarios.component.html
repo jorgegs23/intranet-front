@@ -19,7 +19,7 @@
                         </div>
                         <div class="md:col-3 lg:col-2">
                             <span class="p-float-label">
-                                <p-dropdown [options]="perfiles" [(ngModel)]="perfil" optionLabel="descripcion" inputId="float-label"></p-dropdown>
+                                <p-dropdown [options]="perfiles" [(ngModel)]="perfil" optionLabel="descripcion" inputId="float-label" [style]="{'width':'100%'}"></p-dropdown>
                                 <label for="float-label">Perfil</label>
                               </span>
                         </div>
@@ -101,11 +101,11 @@
                     <th style="width: 4rem">
                         <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                     </th>
-                    <th pSortableColumn="nombre" style="min-width:15rem">Nombre y apellidos <p-sortIcon field="nombre"></p-sortIcon></th>
+                    <th pSortableColumn="nombre">Nombre y apellidos <p-sortIcon field="nombre"></p-sortIcon></th>
                     <th pSortableColumn="email">Email <p-sortIcon field="email"></p-sortIcon></th>
-                    <th pSortableColumn="perfil.descripcion" style="min-width:10rem">Perfil <p-sortIcon field="perfil.descripcion"></p-sortIcon></th>
-                    <th pSortableColumn="validado">Activo <p-sortIcon field="validado"></p-sortIcon></th>
-                    <th pSortableColumn="activo" style="min-width:10rem">Validado <p-sortIcon field="activo"></p-sortIcon></th>
+                    <th pSortableColumn="perfil.descripcion">Perfil <p-sortIcon field="perfil.descripcion"></p-sortIcon></th>
+                    <th pSortableColumn="validado">Validado <p-sortIcon field="validado"></p-sortIcon></th>
+                    <th pSortableColumn="activo" >Activo <p-sortIcon field="activo"></p-sortIcon></th>
                     <th></th>
                 </tr>
             </ng-template>

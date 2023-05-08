@@ -18,6 +18,10 @@ export class UsuariosService {
     return this.http.get<ObjectResponse<Usuario[]>>(`${this.apiServerUrl}/usuarios/all`);
   }
 
+  public getAllUsuariosDesignables(activos: boolean): Observable<ObjectResponse<Usuario[]>>{
+    return this.http.get<ObjectResponse<Usuario[]>>(`${this.apiServerUrl}/usuarios/allDesignables/${activos}`);
+  }
+
   public getUsuariosFiltrados(filtro: FiltroUsuario): Observable<ObjectResponse<ArrayResponse<Usuario>>>{
     return this.http.post<ObjectResponse<ArrayResponse<Usuario>>>(`${this.apiServerUrl}/usuarios/filter`, filtro);
   }

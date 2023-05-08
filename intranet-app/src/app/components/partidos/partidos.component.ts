@@ -221,7 +221,6 @@ export class PartidosComponent implements OnInit{
       this.partidosService.deletePartidos(this.idsPartidosEliminar).subscribe({
         next: (response) => {
           if (response.success){
-            this.idsPartidosEliminar = [];
             this.selectedItems = [];
             this.messages = [{ severity: 'success', summary: 'Ok', detail: response.message }]; 
             this.filtrar(false);         
@@ -231,6 +230,9 @@ export class PartidosComponent implements OnInit{
         },
         error: (error: HttpErrorResponse) => {
           this.messages = [{ severity: 'error', summary: 'Error', detail: 'Error al eliminar el partido' }];  
+        },
+        complete: ()=>{
+          this.idsPartidosEliminar = [];
         }
       });
  

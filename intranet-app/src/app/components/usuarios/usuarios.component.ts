@@ -183,16 +183,19 @@ export class UsuariosComponent implements OnInit{
       this.usuariosService.deleteUsuarios(this.idsUsuariosEliminar).subscribe({
         next: (response) => {
           if (response.success){
-            this.idsUsuariosEliminar = [];
             this.selectedItems = [];
             this.messages = [{ severity: 'success', summary: 'Ok', detail: response.message }]; 
             this.filtrar(false);         
           } else {
             this.messages = [{ severity: 'error', summary: 'Error', detail: response.error }];
           }
+          
         },
         error: (error: HttpErrorResponse) => {
           this.messages = [{ severity: 'error', summary: 'Error', detail: 'Error al eliminar el usuario' }];  
+        },
+        complete: ()=>{
+          this.idsUsuariosEliminar = [];
         }
       });
  

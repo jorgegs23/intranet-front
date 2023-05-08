@@ -11,6 +11,12 @@
             <ng-template pTemplate="content">
 
                     <div class="grid gap-4">
+                        <div class="md:col-3 lg:col-2">
+                            <span class="p-float-label">
+                                <p-dropdown [options]="temporadas" [(ngModel)]="temporada" optionLabel="descripcion" inputId="float-label" [style]="{'width':'100%'}"></p-dropdown>
+                                <label for="float-label">Temporada</label>
+                            </span>
+                        </div>
                         <div class="md:col-3 lg:col-3">
                             <span class="p-float-label">
                                 <input id="nombre" type="text" [(ngModel)]="nombre" pInputText class="w-full">
@@ -19,7 +25,7 @@
                         </div>
                         <div class="md:col-3 lg:col-2">
                             <span class="p-float-label">
-                                <p-dropdown [options]="categorias" [(ngModel)]="categoria" optionLabel="descripcion" inputId="float-label"></p-dropdown>
+                                <p-dropdown [options]="categorias" [(ngModel)]="categoria" optionLabel="descripcion" inputId="float-label" [style]="{'width':'100%'}"></p-dropdown>
                                 <label for="float-label">Categoría</label>
                               </span>
                         </div>
@@ -28,13 +34,7 @@
                                 <input id="municipio" type="text" [(ngModel)]="municipio" pInputText class="w-full">
                                 <label for="municipio">Municipio</label>
                               </span>
-                        </div>
-                        <div class="md:col-3 lg:col-2">
-                            <span class="p-float-label">
-                                <p-dropdown [options]="temporadas" [(ngModel)]="temporada" optionLabel="descripcion" inputId="float-label"></p-dropdown>
-                                <label for="float-label">Temporada</label>
-                              </span>
-                        </div>
+                        </div>                     
                     </div>
                     <div class="flex align-items-center justify-content-center mt-2">
                         <button pButton pRipple label="Limpiar filtros" icon="pi pi-delete-left" class="p-button-secondary mt-2 mr-4" (click)="limpiarFiltros()"></button>

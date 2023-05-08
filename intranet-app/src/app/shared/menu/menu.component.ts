@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService, MenuItem } from 'primeng/api';
+import { Usuario } from 'src/app/models/usuario.model';
+import { AuthService } from 'src/app/services/auth.service';
 import { ThemeService } from 'src/app/services/theme.service';
-import { SESION } from 'src/app/utils/constants';
+import { PERFIL, SESION } from 'src/app/utils/constants';
 
 @Component({
   selector: 'app-menu',
@@ -14,110 +16,151 @@ export class MenuComponent implements OnInit {
 
   items: MenuItem[] = [];
   tema: boolean = false;
+  usuarioAdmin: boolean = false;
 
   constructor(
     private themeService: ThemeService,
     private confirmationService: ConfirmationService,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
     ){
   }
 
   ngOnInit() {
     this.comprobarTheme();
-    this.items = [
-      {
-        label: 'Inicio',
-        icon: 'pi pi-fw pi-home',
-        routerLink: '/inicio'
-      },
-      {
-        label: 'Usuarios',
-        icon: 'pi pi-fw pi-user',
-        items: [
-          {
-            label: 'Listado',
-            icon: 'pi pi-fw pi-user',
-            routerLink: '/usuarios'
-          },
-          {
-            label: 'Nuevo Usuario',
-            icon: 'pi pi-fw pi-user-plus',
-            routerLink: '/usuarios-detail'
-          }   
-        ]
-      },
-      {
-        label: 'Temporadas',
-        icon: 'pi pi-fw pi-calendar',
-        routerLink: '/temporadas'
-      },
-      {
-        label: 'Equipos',
-        icon: 'pi pi-fw pi-users',
-        items: [
-          {
-            label: 'Listado',
-            icon: 'pi pi-fw pi-users',
-            routerLink: '/equipos'
-          },
-          {
-            label: 'Nuevo Equipo',
-            icon: 'pi pi-fw pi-user-plus',
-            routerLink: '/equipos-detail'
-          }   
-        ]
-      },
-      {
-        label: 'Partidos',
-        icon: 'pi pi-fw pi-tags',
-        items: [
-          {
-            label: 'Listado',
-            icon: 'pi pi-fw pi-tags',
-            routerLink: '/partidos'
-          },
-          {
-            label: 'Nuevo Partido',
-            icon: 'pi pi-fw pi-plus-circle',
-            routerLink: '/partidos-detail'
-          }   
-        ]
-      },
-      {
-        label: 'Designaciones',
-        icon: 'pi pi-fw pi-file-export',
-        items: [
-          {
-            label: 'Listado',
-            icon: 'pi pi-fw pi-file',
-            routerLink: '/designaciones'
-          },
-          {
-            label: 'Nueva Designación',
-            icon: 'pi pi-fw pi-file-edit',
-            routerLink: '/designaciones-detail'
-          }   
-        ]
-      },
-      {
-        label: 'Area Personal',
-        icon: 'pi pi-fw pi-user',
-        routerLink: '/area-personal'
-      },
-      
-      {
-        label: 'Salir',
-        icon: 'pi pi-fw pi-power-off',
-        command: e =>  this.salir()
-        // routerLink: 'login'
-      }
-    ];
+    this.checkPerfilUser();
+    
+    if (this.usuarioAdmin){
+      this.items = [
+        {
+          label: 'Inicio',
+          icon: 'pi pi-fw pi-home',
+          routerLink: '/inicio'
+        },
+        {
+          label: 'Usuarios',
+          icon: 'pi pi-fw pi-user',
+          items: [
+            {
+              label: 'Listado',
+              icon: 'pi pi-fw pi-user',
+              routerLink: '/usuarios'
+            },
+            {
+              label: 'Nuevo Usuario',
+              icon: 'pi pi-fw pi-user-plus',
+              routerLink: '/usuarios-detail'
+            }   
+          ]
+        },
+        {
+          label: 'Temporadas',
+          icon: 'pi pi-fw pi-calendar',
+          routerLink: '/temporadas'
+        },
+        {
+          label: 'Equipos',
+          icon: 'pi pi-fw pi-users',
+          items: [
+            {
+              label: 'Listado',
+              icon: 'pi pi-fw pi-users',
+              routerLink: '/equipos'
+            },
+            {
+              label: 'Nuevo Equipo',
+              icon: 'pi pi-fw pi-user-plus',
+              routerLink: '/equipos-detail'
+            }   
+          ]
+        },
+        {
+          label: 'Partidos',
+          icon: 'pi pi-fw pi-tags',
+          items: [
+            {
+              label: 'Listado',
+              icon: 'pi pi-fw pi-tags',
+              routerLink: '/partidos'
+            },
+            {
+              label: 'Nuevo Partido',
+              icon: 'pi pi-fw pi-plus-circle',
+              routerLink: '/partidos-detail'
+            }   
+          ]
+        },
+        {
+          label: 'Designaciones',
+          icon: 'pi pi-fw pi-file-export',
+          items: [
+            {
+              label: 'Listado',
+              icon: 'pi pi-fw pi-file',
+              routerLink: '/designaciones'
+            },
+            {
+              label: 'Nueva Designación',
+              icon: 'pi pi-fw pi-file-edit',
+              routerLink: '/designaciones-detail'
+            }   
+          ]
+        },
+        {
+          label: 'Area Personal',
+          icon: 'pi pi-fw pi-user',
+          routerLink: '/area-personal'
+        },
+        
+        {
+          label: 'Salir',
+          icon: 'pi pi-fw pi-power-off',
+          command: e =>  this.salir()
+          // routerLink: 'login'
+        }
+      ];
+    } else {
+      this.items = [
+        {
+          label: 'Inicio',
+          icon: 'pi pi-fw pi-home',
+          routerLink: '/inicio'
+        },
+        {
+          label: 'Designaciones',
+          icon: 'pi pi-fw pi-file-export',
+          routerLink: '/designaciones'
+        },
+        {
+          label: 'Area Personal',
+          icon: 'pi pi-fw pi-user',
+          routerLink: '/area-personal'
+        },
+        
+        {
+          label: 'Salir',
+          icon: 'pi pi-fw pi-power-off',
+          command: e =>  this.salir()
+          // routerLink: 'login'
+        }
+      ];
+    }
+    
+  }
+
+  checkPerfilUser(){
+    let usuario: Usuario = this.authService.getLoggedUser();
+    if (usuario.perfil?.perfil?.toUpperCase() == PERFIL.ADMIN){
+      this.usuarioAdmin = true;
+    } else {
+      this.usuarioAdmin = false;
+    }
   }
 
   comprobarTheme(){
     let temaSesion = sessionStorage.getItem(SESION.TEMA);
     if (temaSesion != null){
-      if (temaSesion == 'md-dark-indigo'){
+      if (temaSesion == 'dark'){
         this.tema = true;
       } else {
         this.tema = false;

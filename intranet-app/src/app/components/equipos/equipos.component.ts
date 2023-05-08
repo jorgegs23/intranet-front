@@ -50,11 +50,12 @@ export class EquiposComponent implements OnInit{
     private temporadasServive: TemporadasService
   ) {}
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    await this.getTemporadas();
     //this.getEquipos();
     this.filtrar(true);
     this.getCategorias();
-    this.getTemporadas();
+    
   }
 
   applyFilterGlobal($event: Event, stringVal: string) {
@@ -76,15 +77,13 @@ export class EquiposComponent implements OnInit{
     });
   }
   
-  getTemporadas(){
-    this.temporadasServive.getAllTemporadas().subscribe({
+  async getTemporadas(){
+    await this.temporadasServive.getAllTemporadas().subscribe({
       next: (response: ObjectResponse<Temporada[]>) => {
         if (response.success){
           this.temporadas = response.message;
-          this.temporadas.unshift({
-            id: undefined,
-            descripcion: 'Todas'
-          })
+          if (this.temporadas.length > 0)
+            this.temporada = this.temporadas[0];
         } else {
           this.messages = [{ severity: 'error', summary: 'Error', detail: response.error }]; 
         } 
@@ -188,7 +187,6 @@ export class EquiposComponent implements OnInit{
       this.equiposService.deleteEquipos(this.idsEquiposEliminar).subscribe({
         next: (response) => {
           if (response.success){
-            this.idsEquiposEliminar = [];
             this.selectedItems = [];
             this.messages = [{ severity: 'success', summary: 'Ok', detail: response.message }]; 
             this.filtrar(false);         
@@ -198,6 +196,9 @@ export class EquiposComponent implements OnInit{
         },
         error: (error: HttpErrorResponse) => {
           this.messages = [{ severity: 'error', summary: 'Error', detail: 'Error al eliminar el equipo' }];  
+        },
+        complete: ()=>{
+          this.idsEquiposEliminar = [];
         }
       });
  

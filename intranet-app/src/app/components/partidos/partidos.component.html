@@ -13,19 +13,22 @@
                     <div class="grid gap-4">
                         <div class="md:col-3 lg:col-2">
                             <span class="p-float-label">
-                                <p-dropdown [options]="temporadas" [(ngModel)]="temporada" optionLabel="descripcion" inputId="float-label"></p-dropdown>
+                                <p-dropdown [options]="temporadas" [(ngModel)]="temporada" optionLabel="descripcion" inputId="float-label"
+                                [style]="{'width':'100%'}"></p-dropdown>
                                 <label for="float-label">Temporada</label>
                               </span>
                         </div>
                         <div class="md:col-3 lg:col-2">
                             <span class="p-float-label">
-                                <p-dropdown [options]="categorias" [(ngModel)]="categoria" optionLabel="descripcion" inputId="float-label" (onChange)="enableEquipos()"></p-dropdown>
+                                <p-dropdown [options]="categorias" [(ngModel)]="categoria" optionLabel="descripcion" inputId="float-label" 
+                                (onChange)="enableEquipos()" [style]="{'width':'100%'}"></p-dropdown>
                                 <label for="float-label">Categoría</label>
                               </span>
                         </div>
                         <div class="md:col-3 lg:col-2">
                             <span class="p-float-label">
-                                <p-dropdown [options]="competiciones" [(ngModel)]="competicion" optionLabel="descripcion" inputId="float-label"></p-dropdown>
+                                <p-dropdown [options]="competiciones" [(ngModel)]="competicion" optionLabel="descripcion" inputId="float-label"
+                                [style]="{'width':'100%'}"></p-dropdown>
                                 <label for="float-label">Competición</label>
                               </span>
                         </div>
@@ -37,7 +40,7 @@
                         </div>
                         <div class="md:col-3 lg:col-3">
                             <span class="p-float-label">
-                                <p-calendar [(ngModel)]="fecha" [showIcon]="true"  class="w-full"></p-calendar>
+                                <p-calendar [(ngModel)]="fecha" [showIcon]="true"  dateFormat="dd/mm/yy"  [showButtonBar]="true" class="w-full"></p-calendar>
                                 <label htmlFor="fecha">Fecha </label>
                               </span>
                         </div>
