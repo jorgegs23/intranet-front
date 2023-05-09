@@ -1,10 +1,11 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { Message } from 'primeng/api';
 import { Usuario } from 'src/app/models/usuario.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { UsuariosService } from 'src/app/services/usuarios.service';
+import { ObjectResponse } from 'src/app/utils/backend-service';
 import { SESION } from 'src/app/utils/constants';
 
 @Component({
@@ -13,42 +14,47 @@ import { SESION } from 'src/app/utils/constants';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
-  title = 'Acceso a la Intranet';
+  title = 'Acceso a la aplicación';
   user: string = '';
   pass: string = '';
   messages: Message[] = [];
-  showError =  false;
+  showError = false;
 
-
+ // @Output() acceso: EventEmitter<any> = new EventEmitter();
 
   constructor(
     private authService: AuthService,
     private router: Router
-    ){
-       //this.messages = [{ severity: 'success', summary: 'Correcto', detail: 'Usuario logueado' }];
-    }
+  ) { }
 
-  ngOnInit(){
+  ngOnInit() {
 
   }
 
-  login(){
-    this.authService.login(this.user, this.pass).subscribe(
-      (response: Usuario) => {
-        if (response != null){
-          this.authService.usuarioActual = response;
-          sessionStorage.setItem(SESION.USUARIO, JSON.stringify(response));
-          this.router.navigate(['/inicio']);
+  login() {
+    this.authService.login(this.user, this.pass).subscribe({
+      next: (response: ObjectResponse<Usuario>) => {
+        if (response.success) {
+          this.authService.usuarioActual = response.message;
+          sessionStorage.removeItem(SESION.USUARIO);
+          sessionStorage.setItem(SESION.USUARIO, JSON.stringify(response.message));
+          this.router.navigate(['/inicio'])
+            .then(() => {
+              window.location.reload();
+            });
         } else {
-          this.messages = [{ severity: 'error', summary: 'Error', detail: 'Usuario/contraseña incorrectos' }];  
-        } 
-      }, (error: HttpErrorResponse) => {
-        this.messages = [{ severity: 'error', summary: 'Error', detail: 'Error al hacer el login' }];  
+          this.messages = [{ severity: 'error', summary: 'Error', detail: response.error }];
+        }
+      },
+      error: (error: HttpErrorResponse) => {
+        this.messages = [{ severity: 'error', summary: 'Error', detail: 'Error al hacer el login' }];
       }
+    }
+
     );
   }
 
-  registro(){
+  registro() {
     this.router.navigate(['/registro']);
   }
 

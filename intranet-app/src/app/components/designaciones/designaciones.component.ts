@@ -117,15 +117,7 @@ export class DesignacionesComponent implements OnInit{
 
   filtrar(reset: boolean){
     let filtro = {} as FiltroDesignacion ;
-    if (this.temporada?.id != null && this.temporada.id != undefined) filtro.temporada = this.temporada.id;
-    if (this.mes != null && this.mes != undefined) filtro.mes = this.mes;
-    if (this.fecha != null && this.fecha != undefined) filtro.fecha = this.fecha;
-    if (this.usuarioAdmin){
-       if (this.usuario?.id != null && this.usuario.id != undefined) filtro.usuario = this.usuario.id;
-    } else {
-      filtro.usuario = this.usuarioLogueado?.id;
-    }
-   
+    filtro = this.setParamsFiltro(filtro); 
     
     if (reset) {
       this.first = 0;
@@ -253,8 +245,59 @@ export class DesignacionesComponent implements OnInit{
     this.filteredUsuarios = filtered;
   }
 
-  descargar(){
+  setParamsFiltro(filtro: FiltroDesignacion){
+    if (this.temporada?.id != null && this.temporada.id != undefined) filtro.temporada = this.temporada.id;
+    if (this.mes != null && this.mes != undefined) filtro.mes = this.mes;
+    if (this.fecha != null && this.fecha != undefined) filtro.fecha = this.fecha;
+    if (this.usuarioAdmin){
+       if (this.usuario?.id != null && this.usuario.id != undefined) filtro.usuario = this.usuario.id;
+    } else {
+      filtro.usuario = this.usuarioLogueado?.id;
+    }
+    return filtro;
+  }
 
+  descargar(){
+    let filtro = {} as FiltroDesignacion ;
+    filtro = this.setParamsFiltro(filtro); 
+    filtro.idsDesignaciones = []
+    if (this.selectedItems.length > 0)  
+      this.selectedItems.forEach( i=> {
+        if (i.id) filtro.idsDesignaciones?.push(i.id);
+      });
+
+    this.designacionesService.generarInforme(filtro).subscribe({
+      next: (response: ObjectResponse<string>) =>{
+        if (response.success){
+          const muestra = this.base64ToArrayBuffer(response.message);
+          this.processBlob(muestra, 'informe.pdf');    
+        } else {
+          this.messages = [{ severity: 'error', summary: 'Error', detail: response.error }];  
+        }
+      },
+      error: (error: HttpErrorResponse) => {
+        this.messages = [{ severity: 'error', summary: 'Error', detail: 'Error al obtener el informe' }];  
+      }
+    });
+  }
+
+  base64ToArrayBuffer(base64: string): Uint8Array {
+    const binaryString = window.atob(base64);
+    const binaryLen = binaryString.length;
+    let bytes = new Uint8Array(binaryLen);
+    bytes.forEach((_, idx) => {
+      const ascii = binaryString.charCodeAt(idx);
+      bytes[idx] = ascii;
+    });
+    return bytes;
+  }
+
+  processBlob(resultByte: any, nameDoc: string): void {
+    const blob = new Blob([resultByte], { type: "application/pdf" });
+    const link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    link.download = nameDoc;
+    link.click();
   }
 }
 

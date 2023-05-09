@@ -6,6 +6,7 @@ import { PERFIL, SESION } from '../utils/constants';
 import { environment } from 'src/environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { ObjectResponse } from '../utils/backend-service';
 
 @Injectable({
   providedIn: 'root'
@@ -54,11 +55,11 @@ export class AuthService {
     return (this.usuarioActual?.perfil?.perfil) === PERFIL.ADMIN;
   }
 
-   login(login: string, pass: string): Observable<Usuario> {
+   login(login: string, pass: string): Observable<ObjectResponse<Usuario>> {
     let httpParams: HttpParams = new HttpParams();
     httpParams = httpParams.set('login', login);
     httpParams = httpParams.set('pass', pass);
-    return this.http.get<Usuario>(`${this.apiServerUrl}/usuarios/auth/login`,{params: httpParams});
+    return this.http.get<ObjectResponse<Usuario>>(`${this.apiServerUrl}/usuarios/auth/login`,{params: httpParams});
   }
 
   getLoggedUser(): Usuario {

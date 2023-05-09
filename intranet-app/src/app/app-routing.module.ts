@@ -15,17 +15,17 @@ import { DesignacionesDetailComponent } from './components/designaciones/designa
 
 const routes: Routes = [
   {
-    path: 'login',
-    component: LoginComponent
-  },
-  {
-    path: 'registro',
-    component: UsuariosDetailComponent
-  },
-  {
     path: '',
     component: AppLayoutComponent,
     children: [
+      {
+        path: 'login',
+        component: LoginComponent
+      },
+      {
+        path: 'registro',
+        component: UsuariosDetailComponent
+      },
       {
         path: 'inicio',
         component: InicioComponent

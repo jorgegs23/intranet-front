@@ -1,12 +1,12 @@
 <div class="container">
     <p-toolbar styleClass="mt-4 mb-4 gap-2">
         <ng-template pTemplate="left">
-            <h2>Detalle de usuario</h2>
+            <h2>{{registro ? 'Registro de usuario' : 'Detalle de usuario'}}</h2>
         </ng-template>
     
         <ng-template pTemplate="right">
             <button *ngIf="mostrarVolver" pButton pRipple [label]="'Volver'" icon="pi pi-arrow-left" class="mr-2" (click)="volver()"></button>
-            <button *ngIf="this.op == this.OPS.NEW" pButton pRipple 
+            <button *ngIf="this.op == this.OPS.NEW && !registroCorrecto" pButton pRipple 
                 [label]="opcionesAdmin ? 'Añadir usuario' : 'Registrarse'" icon="pi pi-save" class="p-button-success" (click)="guardar()"></button>
             <button *ngIf="this.op == this.OPS.EDIT" pButton pRipple 
                 [label]="opcionesAdmin ? 'Editar usuario' : 'Actualizar datos'" icon="pi pi-save" class="p-button-success" (click)="guardar()"></button>

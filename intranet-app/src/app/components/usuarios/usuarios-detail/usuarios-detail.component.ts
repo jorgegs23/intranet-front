@@ -37,6 +37,8 @@ export class UsuariosDetailComponent implements OnInit {
 
   opcionNo =  {text: 'No', value: false};
   mostrarVolver = true;
+  registro = false;
+  registroCorrecto = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -56,6 +58,7 @@ export class UsuariosDetailComponent implements OnInit {
     if (url.includes('registro')){
       this.op = this.OPS.NEW;
       this.cargaInicial = true;
+      this.registro = true;
     } else if (url.includes('area-personal')){
       this.mostrarVolver = false;
       this.op = this.OPS.EDIT;
@@ -135,29 +138,39 @@ export class UsuariosDetailComponent implements OnInit {
       return;
     } 
     this.usuario = this.usuarioForm.getRawValue() as Usuario;
-    if (this.usuarioForm.get('activo')?.value){
-      let activo = this.usuarioForm.get('activo')?.value;
-      if (activo.value){
-        this.usuario.activo = true;
-      } else {
-        this.usuario.activo = false;
-      }
-    } else this.usuario.activo = false;
-    if (this.usuarioForm.get('validado')?.value){
-      let validado = this.usuarioForm.get('validado')?.value;
-      if (validado.value){
-        this.usuario.validado = true;
-      } else {
-        this.usuario.validado = false;
-      }
-    } else this.usuario.validado = false;
+    if (this.registro){
+      this.usuario.activo = false;
+      this.usuario.validado = false;
+    }else{  
+      if (this.usuarioForm.get('activo')?.value){
+        let activo = this.usuarioForm.get('activo')?.value;
+        if (activo.value){
+          this.usuario.activo = true;
+        } else {
+          this.usuario.activo = false;
+        }
+      } else this.usuario.activo = false;
+      if (this.usuarioForm.get('validado')?.value){
+        let validado = this.usuarioForm.get('validado')?.value;
+        if (validado.value){
+          this.usuario.validado = true;
+        } else {
+          this.usuario.validado = false;
+        }
+      } else this.usuario.validado = false;
+    }
+    
      
     if(this.op == this.OPS.NEW){
       this.usuariosService.addUsuario(this.usuario).subscribe({
         next: (response) => {
           if (response.success){
-            this.messages = [{ severity: 'success', summary: 'Ok', detail: 'Usuario insertado' }]; 
-            //this.router.navigate['/usuarios-detail/${this.usuario.id}'];
+            if (this.registro){
+              this.registroCorrecto = true;
+              this.messages = [{ severity: 'success', summary: 'Ok', detail: 'Usuario registrado y pendiente de validar' }]; 
+            } else {
+              this.messages = [{ severity: 'success', summary: 'Ok', detail: 'Usuario insertado' }]; 
+            }
           } else {
             this.messages = [{ severity: 'error', summary: 'Error', detail: response.error }]; 
           }

@@ -19,6 +19,7 @@ export interface FiltroDesignacion{
     mes?: Date,
     fecha?: Date,
     usuario?: Number,
+    idsDesignaciones?: Number[],
     itemsPorPagina?: number,
     pagina?: number
 }

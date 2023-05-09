@@ -11,7 +11,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 @NgModule({
   declarations: [
-    MenuComponent
+    MenuComponent,
   ],
   exports:[
     MenuComponent

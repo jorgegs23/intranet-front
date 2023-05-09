@@ -242,7 +242,6 @@ export class PartidosDetailComponent {
     await this.equiposSerivice.getEquipoByCategoriaAndTemporada(categoria, idTemporada)
       .then((response)=>{
         this.listadoEquipos = response;
-        console.log('1', this.listadoEquipos)
       })
       .catch((error) => {
         this.messages = [{ severity: 'error', summary: 'Error', detail: 'Error al recuperar los equipos' }];

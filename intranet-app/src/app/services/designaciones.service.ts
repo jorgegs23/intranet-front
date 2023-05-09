@@ -37,4 +37,8 @@ export class DesignacionesService {
   public deleteDesignaciones(id: Number[]): Observable<ObjectResponse<string>> {
     return this.http.delete<ObjectResponse<string>>(`${this.apiServerUrl}/designaciones/delete/${id}`);
   }
+
+  public generarInforme(filtro: FiltroDesignacion): Observable<ObjectResponse<string>>{
+    return this.http.post<ObjectResponse<string>>(`${this.apiServerUrl}/designaciones/informe`, filtro);
+  }
 }
