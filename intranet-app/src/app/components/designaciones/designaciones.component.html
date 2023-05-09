@@ -109,7 +109,7 @@
                     <th pSortableColumn="designacion.partido.equipoLocal.nombre">Local <p-sortIcon field="designacion.partido.equipoLocal.nombre"></p-sortIcon></th>
                     <th pSortableColumn="designacion.partido.equipoVisitante.nombre">Visitante <p-sortIcon field="designacion.partido.equipoVisitante.nombre"></p-sortIcon></th>
                     <th pSortableColumn="fecha">Fecha designación<p-sortIcon field="fecha"></p-sortIcon></th>
-                    <th></th>
+                    <th *ngIf="usuarioAdmin"></th>
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-designacion>
@@ -124,7 +124,7 @@
                     <td>{{ designacion.partido.equipoLocal.nombre }}</td>
                     <td>{{ designacion.partido.equipoVisitante.nombre }}</td>
                     <td>{{ designacion.fecha | date: 'dd/MM/yyyy'}}</td>
-                    <td>
+                    <td *ngIf="usuarioAdmin">
                         <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-warning mr-2" (click)="edit(designacion)"></button>
                         <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="delete(designacion)"></button>
                     </td>
