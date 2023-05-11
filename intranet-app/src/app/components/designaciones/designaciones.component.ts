@@ -53,6 +53,9 @@ export class DesignacionesComponent implements OnInit{
   usuarioLogueado: Usuario | undefined;
   usuarioAdmin: boolean = false;
 
+  anteriorMes: number = 1;
+  anteriorFechaDia: number = 1;
+
   constructor(
     private designacionesService: DesignacionesService,
     private masterDataService: MasterDataService,
@@ -125,6 +128,7 @@ export class DesignacionesComponent implements OnInit{
     }
     filtro.pagina = this.pagina;
     filtro.itemsPorPagina = this.itemsPorPagina;
+
 
     this.designacionesService.getDesignacionesFiltrados(filtro).subscribe({
       next: (response: ObjectResponse<ArrayResponse<Designacion>>) =>{
@@ -253,6 +257,18 @@ export class DesignacionesComponent implements OnInit{
        if (this.usuario?.id != null && this.usuario.id != undefined) filtro.usuario = this.usuario.id;
     } else {
       filtro.usuario = this.usuarioLogueado?.id;
+    }
+    if (filtro.fecha &&  this.anteriorFechaDia != filtro.fecha.getDate()) {
+      let fechaInicioDia = new Date (filtro.fecha!.setHours(0,0,0))
+      filtro.fecha?.setUTCDate(fechaInicioDia.getDate());
+      this.anteriorFechaDia = filtro.fecha.getDate();
+    }
+
+    if (filtro.mes && this.anteriorMes != filtro.mes.getMonth()) {
+      let fechaInicioMes = new Date(filtro.mes.getFullYear(), filtro.mes.getMonth(), 1); 
+      filtro.mes?.setUTCDate(fechaInicioMes.getDate())
+      filtro.mes.setMonth(filtro.mes.getMonth() + 1) // Al parsearlo a UTC los meses comienzan en 0
+      this.anteriorMes = filtro.mes.getMonth();
     }
     return filtro;
   }

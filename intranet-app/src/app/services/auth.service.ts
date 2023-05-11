@@ -5,13 +5,15 @@ import { Generic } from '../utils/utils';
 import { PERFIL, SESION } from '../utils/constants';
 import { environment } from 'src/environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, ReplaySubject, Subject, tap } from 'rxjs';
 import { ObjectResponse } from '../utils/backend-service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+
+  public loggedIn: Subject<boolean> = new ReplaySubject<boolean>(1);
 
   private apiServerUrl = environment.apiBaseUrl;
   usuarioActual: Usuario = {
@@ -59,7 +61,7 @@ export class AuthService {
     let httpParams: HttpParams = new HttpParams();
     httpParams = httpParams.set('login', login);
     httpParams = httpParams.set('pass', pass);
-    return this.http.get<ObjectResponse<Usuario>>(`${this.apiServerUrl}/usuarios/auth/login`,{params: httpParams});
+    return this.http.get<ObjectResponse<Usuario>>(`${this.apiServerUrl}/usuarios/auth/login`,{params: httpParams})
   }
 
   getLoggedUser(): Usuario {
@@ -96,7 +98,12 @@ export class AuthService {
         activo: false 
       }
     };
-
     this.router.navigate([environment.defaultRoute])
   }
+
+  loginStatusChange(): Observable<boolean> {
+    return this.loggedIn.asObservable();
+  }
+
+  
 }

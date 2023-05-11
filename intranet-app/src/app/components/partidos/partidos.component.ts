@@ -54,6 +54,8 @@ export class PartidosComponent implements OnInit{
   disableEquipos = true;
   delay: number = 300;
 
+  anteriorFechaDia: number = 1;
+
   constructor(
     private partidosService: PartidosService,
     private masterDataService: MasterDataService,
@@ -138,6 +140,12 @@ export class PartidosComponent implements OnInit{
     filtro.pagina = this.pagina;
     filtro.itemsPorPagina = this.itemsPorPagina;
 
+    if (filtro.fecha && this.anteriorFechaDia != filtro.fecha.getDate()) {
+      let fechaInicioDia = new Date (filtro.fecha!.setHours(0,0,0))
+      filtro.fecha?.setUTCDate(fechaInicioDia?.getDate())
+      this.anteriorFechaDia = filtro.fecha.getDate();
+    }
+    
     this.partidosService.getPartidosFiltrados(filtro).subscribe({
       next: (response: ObjectResponse<ArrayResponse<Partido>>) =>{
         if (response.success){

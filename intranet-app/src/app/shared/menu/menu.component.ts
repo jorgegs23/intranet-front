@@ -28,6 +28,10 @@ export class MenuComponent implements OnInit {
   ngOnInit() {
     this.comprobarTheme();
     this.checkPerfilUser();
+      this.authService.loginStatusChange().subscribe(loggedIn => {
+        if (loggedIn)
+          this.checkPerfilUser()
+      });
   }
 
   checkPerfilUser() {

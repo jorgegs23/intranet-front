@@ -38,10 +38,8 @@ export class LoginComponent {
           this.authService.usuarioActual = response.message;
           sessionStorage.removeItem(SESION.USUARIO);
           sessionStorage.setItem(SESION.USUARIO, JSON.stringify(response.message));
+          this.authService.loggedIn.next(true)
           this.router.navigate(['/inicio'])
-            .then(() => {
-              window.location.reload();
-            });
         } else {
           this.messages = [{ severity: 'error', summary: 'Error', detail: response.error }];
         }

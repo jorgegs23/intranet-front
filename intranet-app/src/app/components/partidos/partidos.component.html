@@ -134,7 +134,7 @@
                     <td>{{ partido.categoria.descripcion }}</td>
                     <td>{{ partido.equipoLocal.nombre }}</td>
                     <td>{{ partido.equipoVisitante.nombre }}</td>
-                    <td>{{ partido.fecha | date: 'dd/MM/yyyy hh:mm'}}</td>
+                    <td>{{ partido.fecha | date: 'dd/MM/yyyy HH:mm'}}</td>
                     <td>
                         <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-warning mr-2" (click)="edit(partido)"></button>
                         <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="delete(partido)"></button>

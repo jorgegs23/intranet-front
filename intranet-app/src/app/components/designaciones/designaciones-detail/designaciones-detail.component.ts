@@ -205,6 +205,10 @@ export class DesignacionesDetailComponent {
     this.recogerFormulario();
 
     if(this.op == this.OPS.NEW){
+      if (this.designacion.fecha) {
+        let fechaInicioDia = new Date (this.designacion.fecha!.setHours(0,0,0))
+        this.designacion.fecha?.setUTCDate(fechaInicioDia?.getDate())
+      }
       this.designacionesService.addDesignacion(this.designacion).subscribe({
         next: (response) => {
           if (response.success){
