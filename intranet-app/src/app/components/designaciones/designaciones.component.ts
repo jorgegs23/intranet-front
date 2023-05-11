@@ -56,6 +56,8 @@ export class DesignacionesComponent implements OnInit{
   anteriorMes: number = 1;
   anteriorFechaDia: number = 1;
 
+  firstDayOfWeek: number = 1;
+
   constructor(
     private designacionesService: DesignacionesService,
     private masterDataService: MasterDataService,
@@ -155,6 +157,7 @@ export class DesignacionesComponent implements OnInit{
     this.fecha =  undefined;
     this.usuario = undefined;
     this.filtrar(true);
+    this.anteriorMes = -1;
   }
 
   add(){
@@ -262,6 +265,7 @@ export class DesignacionesComponent implements OnInit{
       let fechaInicioDia = new Date (filtro.fecha!.setHours(0,0,0))
       filtro.fecha?.setUTCDate(fechaInicioDia.getDate());
       this.anteriorFechaDia = filtro.fecha.getDate();
+      if (fechaInicioDia.getDate() === 1) filtro.fecha.setMonth(filtro.fecha.getMonth() + 1)
     }
 
     if (filtro.mes && this.anteriorMes != filtro.mes.getMonth()) {
@@ -314,6 +318,14 @@ export class DesignacionesComponent implements OnInit{
     link.href = window.URL.createObjectURL(blob);
     link.download = nameDoc;
     link.click();
+  }
+
+  reiniciarMesAnterior() {
+    this.anteriorMes = -1;
+  }
+
+  reiniciarDiaAnterior() {
+    this.anteriorFechaDia = -1;
   }
 }
 

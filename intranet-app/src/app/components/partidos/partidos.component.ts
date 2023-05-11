@@ -54,7 +54,9 @@ export class PartidosComponent implements OnInit{
   disableEquipos = true;
   delay: number = 300;
 
-  anteriorFechaDia: number = 1;
+  firstDayOfWeek: number = 1;
+
+  anteriorFechaDia: number | undefined = 1;
 
   constructor(
     private partidosService: PartidosService,
@@ -142,8 +144,9 @@ export class PartidosComponent implements OnInit{
 
     if (filtro.fecha && this.anteriorFechaDia != filtro.fecha.getDate()) {
       let fechaInicioDia = new Date (filtro.fecha!.setHours(0,0,0))
-      filtro.fecha?.setUTCDate(fechaInicioDia?.getDate())
+      filtro.fecha?.setUTCDate(fechaInicioDia.getDate());
       this.anteriorFechaDia = filtro.fecha.getDate();
+      if (fechaInicioDia.getDate() === 1) filtro.fecha.setMonth(filtro.fecha.getMonth() + 1)
     }
     
     this.partidosService.getPartidosFiltrados(filtro).subscribe({
@@ -288,5 +291,9 @@ export class PartidosComponent implements OnInit{
       }
     });
     this.filteredEquipos = filtered;
+  }
+
+  reiniciarDiaAnterior() {
+    this.anteriorFechaDia = -1;
   }
 }

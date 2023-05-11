@@ -26,7 +26,6 @@ export class InicioComponent implements OnInit {
       summary: 'Usuario "' + this.usuario.login + '" logueado' , 
       detail: 'perfil: ' + this.usuario.perfil?.descripcion 
     }];
-    throw new Error('Method not implemented.');
   }
 
 

@@ -50,6 +50,8 @@ export class DesignacionesDetailComponent {
 
   delay: number = 300;
 
+  firstDayOfWeek: number = 1;
+
   constructor(
     private designacionesService: DesignacionesService,
     private masterDataService: MasterDataService,
@@ -206,8 +208,9 @@ export class DesignacionesDetailComponent {
 
     if(this.op == this.OPS.NEW){
       if (this.designacion.fecha) {
-        let fechaInicioDia = new Date (this.designacion.fecha!.setHours(0,0,0))
+        let fechaInicioDia = new Date (this.designacion.fecha!)
         this.designacion.fecha?.setUTCDate(fechaInicioDia?.getDate())
+        if (fechaInicioDia.getDate() === 1) this.designacion.fecha.setMonth(this.designacion.fecha.getMonth() + 1)
       }
       this.designacionesService.addDesignacion(this.designacion).subscribe({
         next: (response) => {
@@ -224,6 +227,11 @@ export class DesignacionesDetailComponent {
         }
       });
     } else if (this.op = this.OPS.EDIT){
+      if (this.designacion.fecha) {
+        let fechaInicioDia = new Date (this.designacion.fecha!)
+        this.designacion.fecha?.setUTCDate(fechaInicioDia?.getDate())
+        if (fechaInicioDia.getDate() === 1) this.designacion.fecha.setMonth(this.designacion.fecha.getMonth() + 1)
+      }
       this.designacionesService.editDesignacion(this.designacion).subscribe({
         next: (response) => {
           if (response.success){

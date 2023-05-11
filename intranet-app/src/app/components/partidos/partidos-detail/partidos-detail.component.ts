@@ -46,6 +46,8 @@ export class PartidosDetailComponent {
 
   delay: number = 300;
 
+  firstDayOfWeek: number = 1;
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private formBuilder: FormBuilder,
