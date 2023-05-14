@@ -123,7 +123,7 @@ export class MenuComponent implements OnInit {
         ]
       },
       {
-        label: 'Area Personal',
+        label: 'Área Personal',
         icon: 'pi pi-fw pi-user',
         routerLink: '/area-personal'
       },
@@ -150,7 +150,7 @@ export class MenuComponent implements OnInit {
         routerLink: '/designaciones'
       },
       {
-        label: 'Area Personal',
+        label: 'Área Personal',
         icon: 'pi pi-fw pi-user',
         routerLink: '/area-personal'
       },

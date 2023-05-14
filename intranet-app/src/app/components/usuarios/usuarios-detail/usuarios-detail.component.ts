@@ -117,8 +117,8 @@ export class UsuariosDetailComponent implements OnInit {
     this.usuarioForm=this.formBuilder.group({
       id: [this.usuario?.id ? this.usuario.id :null],
       login: [this.usuario?.login ? this.usuario.login : '', [Validators.required]],
-      pass: [this.usuario?.pass ? this.usuario.pass : ''],
-      nombre: [this.usuario?.nombre ? this.usuario.nombre : null,],
+      pass: [this.usuario?.pass ? this.usuario.pass : '',  [Validators.required]],
+      nombre: [this.usuario?.nombre ? this.usuario.nombre : null,  [Validators.required]],
       apellido1: [this.usuario?.apellido1 ? this.usuario.apellido1 : null,],
       apellido2: [this.usuario?.apellido2 ? this.usuario.apellido2 : null,],
       docIdentidad: [this.usuario?.docIdentidad ? this.usuario.docIdentidad : null,],
@@ -134,7 +134,7 @@ export class UsuariosDetailComponent implements OnInit {
 
   guardar(){
     if (this.usuarioForm.invalid){
-      this.messages = [{ severity: 'error', summary: 'Error', detail: 'Hay errores en el formulario' }];  
+      this.messages = [{ severity: 'error', summary: 'Error', detail: 'Hay errores en el formulario, faltan campos por rellenar' }];  
       return;
     } 
     this.usuario = this.usuarioForm.getRawValue() as Usuario;

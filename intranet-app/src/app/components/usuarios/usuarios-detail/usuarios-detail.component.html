@@ -20,7 +20,7 @@
         <div class="field col-12 md:col-4 md:mb-5">
             <span class="p-float-label mx-4">
                 <input pInputText id="login" formControlName="login" class="w-full" />
-                <label htmlFor="login">Login *</label>
+                <label htmlFor="login">Usuario *</label>
             </span>
         </div>
 
@@ -28,20 +28,20 @@
             <span class="p-float-label mx-4">
                 <p-password formControlName="pass" [toggleMask]="true" [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}"></p-password>
                 <!-- <input pInputText type="password" id="pass" formControlName="pass" class="w-full"/> -->
-                <label htmlFor="pass">Contraseña</label>
+                <label htmlFor="pass">Contraseña *</label>
             </span>
         </div>
 
         <div class="field col-12 md:col-2 md:mb-5">
             <span *ngIf="opcionesAdmin" class="p-float-label mx-4">
                 <p-dropdown [options]="opcionesSiONo" formControlName="validado" optionLabel="text" inputId="float-label"></p-dropdown>
-                <label for="float-label">Validado</label>
+                <label for="float-label">Validado *</label>
               </span>
         </div>
         <div class="field col-12 md:col-1 md:mb-5">
             <span *ngIf="opcionesAdmin" class="p-float-label mx-4">
                 <p-dropdown [options]="opcionesSiONo" formControlName="activo"  optionLabel="text" inputId="float-label"></p-dropdown>
-                <label for="float-label">Activo</label>
+                <label for="float-label">Activo *</label>
               </span>
         </div>
 
@@ -49,7 +49,7 @@
         <div class="field col-12 md:col-4 md:mb-5">
             <span class="p-float-label mx-4">
                 <input pInputText id="nombre" formControlName="nombre" class="w-full"/>
-                <label htmlFor="nombre">Nombre</label>
+                <label htmlFor="nombre">Nombre *</label>
             </span>
         </div>
         <div class="field col-12 md:col-4 md:mb-5">
@@ -84,7 +84,7 @@
         <div class="field col-12 md:col-4 md:mb-5">
             <span class="p-float-label mx-4">
                 <p-dropdown [options]="perfiles" formControlName="perfil" optionLabel="descripcion" inputId="float-label"></p-dropdown>
-                <label for="float-label">Perfil</label>
+                <label for="float-label">Perfil *</label>
               </span>
         </div>
 

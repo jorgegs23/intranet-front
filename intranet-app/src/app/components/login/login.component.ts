@@ -14,7 +14,8 @@ import { SESION } from 'src/app/utils/constants';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
-  title = 'Acceso a la aplicación';
+  title1 = 'Zona de Arbitraje';
+  title2 = 'Acceso a la aplicación';
   user: string = '';
   pass: string = '';
   messages: Message[] = [];
