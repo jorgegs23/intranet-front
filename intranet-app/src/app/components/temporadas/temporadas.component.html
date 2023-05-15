@@ -62,8 +62,8 @@
                         <p-tableRadioButton [value]="temporada"></p-tableRadioButton >
                     </td>
                     <td>{{ temporada.descripcion }} </td>
-                    <td>{{ temporada.fechaIncio }}</td>
-                    <td>{{ temporada.fechaFin ? temporada.fechaFin : 'Sin finalizar' }}</td>
+                    <td>{{ temporada.fechaIncio | date: 'dd/MM/yyyy' }}</td>
+                    <td>{{ temporada.fechaFin ? (temporada.fechaFin | date: 'dd/MM/yyyy'): 'Sin finalizar' }}</td>
                     <td>{{ temporada.activa ? "Sí" : "No"}}</td>
                 </tr>
             </ng-template>
