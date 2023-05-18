@@ -70,6 +70,12 @@ export class PartidosDetailComponent {
         this.op = this.OPS.EDIT;
         this.idPartido = params['idPartido'];
         this.getPartido();
+        if (localStorage.getItem("idCreado") && localStorage.getItem("idCreado")!  === this.idPartido) {
+          let messageStorageSplited = localStorage.getItem("messagesCreado")?.split(",");
+          this.messages = [{ severity: messageStorageSplited![0], summary: messageStorageSplited![1], detail: messageStorageSplited![2] }];
+          localStorage.removeItem("idCreado");
+          localStorage.removeItem("messagesCreado");
+        }
       } else {
         this.op = this.OPS.NEW;
         this.cargaInicial = true;
@@ -192,11 +198,12 @@ export class PartidosDetailComponent {
         next: (response) => {
           if (response.success){
             this.messages = [{ severity: 'success', summary: 'Ok', detail: 'Partido insertado' }];
-            //this.router.navigate['/partidos-detail/${this.partido.id}'];
+            localStorage.setItem("idCreado", response.message.id?.toString()!)
+            localStorage.setItem("messagesCreado", this.messages[0].severity! + ", " + this.messages[0].summary! + ", " + this.messages[0].detail!)
+            this.router.navigate([`/partidos-detail/${response.message.id}`]);
           } else {
             this.messages = [{ severity: 'error', summary: 'Error', detail: response.error }];
           }
-          //this.router.navigate['/partidos-detail/${this.partido.id}'];
         },
         error: (error: HttpErrorResponse) => {
           this.messages = [{ severity: 'error', summary: 'Error', detail: 'Error al guardar el partido' }];
@@ -211,7 +218,6 @@ export class PartidosDetailComponent {
             this.messages = [{ severity: 'error', summary: 'Error', detail: response.error }];
           }
 
-          //this.router.navigate['/partidos-detail/${this.partido.id}'];
         },
         error: (error: HttpErrorResponse) => {
           this.messages = [{ severity: 'error', summary: 'Error', detail: 'Error al guardar el partido' }];

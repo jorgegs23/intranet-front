@@ -55,6 +55,12 @@ export class EquiposDetailComponent {
         this.op = this.OPS.EDIT;
         this.idEquipo = params['idEquipo'];    
         this.getEquipo();
+        if (localStorage.getItem("idCreado") && localStorage.getItem("idCreado")!  === this.idEquipo) {
+          let messageStorageSplited = localStorage.getItem("messagesCreado")?.split(",");
+          this.messages = [{ severity: messageStorageSplited![0], summary: messageStorageSplited![1], detail: messageStorageSplited![2] }];
+          localStorage.removeItem("idCreado");
+          localStorage.removeItem("messagesCreado");
+        }
       } else {
         this.op = this.OPS.NEW;
         this.cargaInicial = true;
@@ -151,11 +157,12 @@ export class EquiposDetailComponent {
         next: (response) => {
           if (response.success){
             this.messages = [{ severity: 'success', summary: 'Ok', detail: 'Equipo insertado' }]; 
-            //this.router.navigate['/equipos-detail/${this.equipo.id}'];
+            localStorage.setItem("idCreado", response.message.id?.toString()!)
+            localStorage.setItem("messagesCreado", this.messages[0].severity! + ", " + this.messages[0].summary! + ", " + this.messages[0].detail!)
+            this.router.navigate([`/equipos-detail/${response.message.id}`]);
           } else {
             this.messages = [{ severity: 'error', summary: 'Error', detail: response.error }]; 
           }
-          //this.router.navigate['/equipos-detail/${this.equipo.id}'];
         },
         error: (error: HttpErrorResponse) => {
           this.messages = [{ severity: 'error', summary: 'Error', detail: 'Error al guardar el equipo' }];  
@@ -170,7 +177,6 @@ export class EquiposDetailComponent {
             this.messages = [{ severity: 'error', summary: 'Error', detail: response.error }];
           }
           
-          //this.router.navigate['/equipos-detail/${this.equipo.id}'];
         },
         error: (error: HttpErrorResponse) => {
           this.messages = [{ severity: 'error', summary: 'Error', detail: 'Error al guardar el equipo' }];  

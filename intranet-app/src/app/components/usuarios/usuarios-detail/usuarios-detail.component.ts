@@ -72,6 +72,12 @@ export class UsuariosDetailComponent implements OnInit {
           this.op = this.OPS.EDIT;
           this.idUsuario = params['idUsuario'];    
           this.getUsuario();
+          if (localStorage.getItem("idCreado") && localStorage.getItem("idCreado")!  === this.idUsuario) {
+            let messageStorageSplited = localStorage.getItem("messagesCreado")?.split(",");
+            this.messages = [{ severity: messageStorageSplited![0], summary: messageStorageSplited![1], detail: messageStorageSplited![2] }];
+            localStorage.removeItem("idCreado");
+            localStorage.removeItem("messagesCreado");
+          }
         } else {
           this.op = this.OPS.NEW;
           this.cargaInicial = true;
@@ -168,13 +174,18 @@ export class UsuariosDetailComponent implements OnInit {
             if (this.registro){
               this.registroCorrecto = true;
               this.messages = [{ severity: 'success', summary: 'Ok', detail: 'Usuario registrado y pendiente de validar' }]; 
+              this.usuarioForm.disable(); // TODO REVISAR disabled
+
             } else {
               this.messages = [{ severity: 'success', summary: 'Ok', detail: 'Usuario insertado' }]; 
+              localStorage.setItem("idCreado", response.message.id?.toString()!)
+              localStorage.setItem("messagesCreado", this.messages[0].severity! + ", " + this.messages[0].summary! + ", " + this.messages[0].detail!)
+              this.router.navigate([`/usuarios-detail/${response.message.id}`]);
+              // this.router.navigateByUrl("/usuarios-detail/" + response.message.id)
             }
           } else {
             this.messages = [{ severity: 'error', summary: 'Error', detail: response.error }]; 
           }
-          //this.router.navigate['/usuarios-detail/${this.usuario.id}'];
         },
         error: (error: HttpErrorResponse) => {
           this.messages = [{ severity: 'error', summary: 'Error', detail: 'Error al guardar el usaurio' }];  
@@ -189,7 +200,6 @@ export class UsuariosDetailComponent implements OnInit {
             this.messages = [{ severity: 'error', summary: 'Error', detail: response.error }];
           }
           
-          //this.router.navigate['/usuarios-detail/${this.usuario.id}'];
         },
         error: (error: HttpErrorResponse) => {
           this.messages = [{ severity: 'error', summary: 'Error', detail: 'Error al guardar el usaurio' }];  

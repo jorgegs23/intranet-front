@@ -74,6 +74,12 @@ export class DesignacionesDetailComponent {
         this.op = this.OPS.EDIT;
         this.idDesignacion = params['idDesignacion'];
         this.getDesignacion();
+        if (localStorage.getItem("idCreado") && localStorage.getItem("idCreado")!  === this.idDesignacion) {
+          let messageStorageSplited = localStorage.getItem("messagesCreado")?.split(",");
+          this.messages = [{ severity: messageStorageSplited![0], summary: messageStorageSplited![1], detail: messageStorageSplited![2] }];
+          localStorage.removeItem("idCreado");
+          localStorage.removeItem("messagesCreado");
+        }
       } else {
         this.op = this.OPS.NEW;
         this.cargaInicial = true;
@@ -216,11 +222,12 @@ export class DesignacionesDetailComponent {
         next: (response) => {
           if (response.success){
             this.messages = [{ severity: 'success', summary: 'Ok', detail: 'Designación insertada' }];
-            //this.router.navigate['/partidos-detail/${this.partido.id}'];
+            localStorage.setItem("idCreado", response.message.id?.toString()!)
+            localStorage.setItem("messagesCreado", this.messages[0].severity! + ", " + this.messages[0].summary! + ", " + this.messages[0].detail!)
+            this.router.navigate([`/designaciones-detail/${response.message.id}`]);
           } else {
             this.messages = [{ severity: 'error', summary: 'Error', detail: response.error }];
           }
-          //this.router.navigate['/partidos-detail/${this.partido.id}'];
         },
         error: (error: HttpErrorResponse) => {
           this.messages = [{ severity: 'error', summary: 'Error', detail: 'Error al guardar la designación' }];
