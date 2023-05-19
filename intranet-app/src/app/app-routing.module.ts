@@ -86,6 +86,10 @@ const routes: Routes = [
         path: 'designaciones-detail/:idDesignacion',
         component: DesignacionesDetailComponent
       },
+      {
+        path: '**',
+        redirectTo: "login"
+      }
     ]
   }
 ]

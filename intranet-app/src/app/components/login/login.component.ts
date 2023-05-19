@@ -29,7 +29,9 @@ export class LoginComponent {
   ) { }
 
   ngOnInit() {
-
+    if (sessionStorage.getItem("usuario")) {
+      this.router.navigateByUrl("/inicio")
+    }
   }
 
   login() {
